@@ -1,9 +1,13 @@
 import logging
 import os
+import time
+from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 
 from health_scraper.api.endpoints import router
@@ -84,6 +88,59 @@ app.add_middleware(
 # Include API router
 app.include_router(router)
 
+# Setup templates directory for frontend
+templates_dir = Path(__file__).parent / "templates"
+templates = Jinja2Templates(directory=str(templates_dir)) if templates_dir.exists() else None
+
+# Mount static files directory (optional, for additional assets)
+static_dir = Path(__file__).parent / "static"
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+async def serve_frontend(request: Request):
+    """Serve the frontend HTML page"""
+    # First try templates directory
+    index_template = templates_dir / "index.html"
+    if index_template.exists():
+        return FileResponse(str(index_template))
+    
+    # Fallback to static directory
+    index_static = static_dir / "index.html"
+    if index_static.exists():
+        return FileResponse(str(index_static))
+    
+    return HTMLResponse(
+        content="""
+        <html>
+            <head>
+                <title>Health Scraper API</title>
+                <style>
+                    body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+                    h1 { color: #0d6efd; }
+                    a { color: #0d6efd; }
+                </style>
+            </head>
+            <body>
+                <h1>🏥 Health Scraper API</h1>
+                <p>Welcome to the Health Institutions Scraper API.</p>
+                <p>📚 <a href="/docs">API Documentation (Swagger)</a></p>
+                <p>📖 <a href="/redoc">API Documentation (ReDoc)</a></p>
+            </body>
+        </html>
+        """,
+        status_code=200
+    )
+
+@app.get("/health", tags=["System"])
+async def health_check():
+    """Health check endpoint for Azure Container Apps / Load Balancer"""
+    return {
+        "status": "healthy",
+        "service": "health-scraper-api",
+        "version": "1.0.0"
+    }
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Global exception handler"""
@@ -109,7 +166,6 @@ async def log_requests(request: Request, call_next):
 
 if __name__ == "__main__":
     import uvicorn
-    import time
     
     port = int(os.getenv("API_PORT", 8000))
     host = os.getenv("API_HOST", "0.0.0.0")

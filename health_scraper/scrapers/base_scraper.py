@@ -342,6 +342,210 @@ class BaseHealthScraper:
         
         return unique_profiles
     
+    def scrape_query(self, query: str, max_results: int = 10, use_selenium: bool = True) -> ScrapeResult:
+        """
+        Search for and scrape multiple health institutions based on a query.
+        
+        Args:
+            query: Search query (e.g., "IPS en Bogotá Colombia")
+            max_results: Maximum number of institutions to find
+            use_selenium: Whether to use Selenium for scraping
+            
+        Returns:
+            ScrapeResult containing list of found institutions
+        """
+        start_time = time.time()
+        institutions = []
+        scraped_urls = []
+        
+        try:
+            logger.info(f"Scraping query: {query}")
+            
+            # Search Google for the query
+            search_url = f"https://www.google.com/search?q={query.replace(' ', '+')}&num={max_results + 10}"
+            
+            soup = self._get_page_content(search_url, use_selenium=use_selenium)
+            if not soup:
+                return ScrapeResult(
+                    success=False,
+                    error_message="Failed to fetch search results",
+                    processing_time=time.time() - start_time
+                )
+            
+            # Extract institution names and URLs from search results
+            found_institutions = []
+            
+            # Look for result blocks in Google search
+            result_divs = soup.find_all('div', class_='g') or soup.find_all('div', class_='tF2Cxc')
+            
+            for div in result_divs[:max_results * 2]:
+                try:
+                    # Try to find title and link
+                    title_elem = div.find('h3')
+                    link_elem = div.find('a', href=True)
+                    
+                    if title_elem and link_elem:
+                        title = title_elem.get_text(strip=True)
+                        href = link_elem.get('href', '')
+                        
+                        # Skip Google internal links
+                        if 'google.com' in href:
+                            continue
+                        
+                        # Extract URL from Google redirect if needed
+                        if '/url?q=' in href:
+                            href = href.split('/url?q=')[1].split('&')[0]
+                        
+                        if title and href and href.startswith('http'):
+                            found_institutions.append({
+                                'name': title,
+                                'url': href
+                            })
+                except Exception as e:
+                    logger.debug(f"Error parsing search result: {e}")
+                    continue
+            
+            # Fallback: try simpler extraction from all links
+            if not found_institutions:
+                all_links = soup.find_all('a', href=True)
+                for link in all_links:
+                    href = link.get('href', '')
+                    title = link.get_text(strip=True)
+                    
+                    if '/url?q=' in href:
+                        actual_url = href.split('/url?q=')[1].split('&')[0]
+                        if actual_url.startswith('http') and 'google' not in actual_url.lower():
+                            # Extract institution name from title or URL
+                            if title and len(title) > 3 and 'google' not in title.lower():
+                                found_institutions.append({
+                                    'name': title[:100],  # Limit length
+                                    'url': actual_url
+                                })
+            
+            logger.info(f"Found {len(found_institutions)} potential institutions")
+            
+            # Scrape each found institution
+            seen_urls = set()
+            for item in found_institutions[:max_results]:
+                if item['url'] in seen_urls:
+                    continue
+                seen_urls.add(item['url'])
+                
+                try:
+                    # Create basic institution record
+                    institution = HealthInstitution(
+                        name=self.text_processor.clean_institution_name(item['name']) if hasattr(self.text_processor, 'clean_institution_name') else item['name'],
+                        institution_type=self._determine_institution_type(item['name']),
+                        website=item['url']
+                    )
+                    
+                    # Try to fetch more details from the page
+                    page_soup = self._get_page_content(item['url'], use_selenium=False)
+                    if page_soup:
+                        # Extract contacts
+                        contacts = self._extract_contact_info(page_soup)
+                        institution.contacts = self._deduplicate_contacts(contacts)
+                        
+                        # Extract social media
+                        social_media = self._extract_social_media_links(page_soup, item['url'])
+                        institution.social_media = self._deduplicate_social_media(social_media)
+                        
+                        # Extract IT info
+                        institution.it_info = self._extract_it_information(page_soup)
+                        
+                        # Try to extract location from page
+                        location_info = self._extract_location_from_page(page_soup, query)
+                        if location_info:
+                            institution.city = location_info.get('city')
+                            institution.department = location_info.get('department')
+                            institution.address = location_info.get('address')
+                    
+                    institutions.append(institution)
+                    scraped_urls.append(item['url'])
+                    
+                    time.sleep(self.rate_limit)
+                    
+                except Exception as e:
+                    logger.warning(f"Failed to scrape {item['url']}: {e}")
+                    continue
+                    
+                if len(institutions) >= max_results:
+                    break
+            
+            processing_time = time.time() - start_time
+            
+            return ScrapeResult(
+                success=True,
+                institutions=institutions,
+                scraped_urls=scraped_urls,
+                processing_time=processing_time
+            )
+            
+        except Exception as e:
+            logger.error(f"Error in scrape_query: {e}")
+            return ScrapeResult(
+                success=False,
+                error_message=str(e),
+                processing_time=time.time() - start_time
+            )
+    
+    def _extract_location_from_page(self, soup: BeautifulSoup, query: str) -> Optional[Dict[str, str]]:
+        """Try to extract location information from page content."""
+        location = {}
+        text_content = soup.get_text()
+        
+        # Colombian cities to look for
+        cities = [
+            'Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena', 
+            'Cúcuta', 'Bucaramanga', 'Pereira', 'Santa Marta', 'Ibagué',
+            'Manizales', 'Villavicencio', 'Pasto', 'Montería', 'Neiva',
+            'Armenia', 'Valledupar', 'Popayán', 'Sincelejo', 'Tunja'
+        ]
+        
+        # Departments
+        departments = {
+            'Bogotá': 'Bogotá D.C.',
+            'Medellín': 'Antioquia',
+            'Cali': 'Valle del Cauca',
+            'Barranquilla': 'Atlántico',
+            'Cartagena': 'Bolívar',
+            'Cúcuta': 'Norte de Santander',
+            'Bucaramanga': 'Santander',
+            'Pereira': 'Risaralda',
+            'Santa Marta': 'Magdalena',
+            'Ibagué': 'Tolima'
+        }
+        
+        # First check query for city hint
+        for city in cities:
+            if city.lower() in query.lower():
+                location['city'] = city
+                location['department'] = departments.get(city, '')
+                break
+        
+        # If not found in query, search in page content
+        if not location.get('city'):
+            for city in cities:
+                if city.lower() in text_content.lower():
+                    location['city'] = city
+                    location['department'] = departments.get(city, '')
+                    break
+        
+        # Try to find address pattern
+        address_patterns = [
+            r'(?:Calle|Carrera|Avenida|Cra|Cl|Av)\s*\.?\s*\d+[A-Za-z]?\s*(?:#|No\.?)?\s*\d+[-\d]*',
+            r'Diagonal\s+\d+\s*#?\s*\d+',
+            r'Transversal\s+\d+\s*#?\s*\d+'
+        ]
+        
+        for pattern in address_patterns:
+            match = re.search(pattern, text_content, re.IGNORECASE)
+            if match:
+                location['address'] = match.group(0)
+                break
+        
+        return location if location else None
+    
     def cleanup(self):
         """Clean up resources"""
         if self.driver:

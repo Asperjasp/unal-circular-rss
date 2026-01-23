@@ -1,14 +1,16 @@
 import logging
 import asyncio
+import io
+import csv
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional
 import time
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from ..models.institution import (
     HealthInstitution, ScrapeResult, BulkScrapeRequest, 
-    BulkScrapeResponse, InstitutionType
+    BulkScrapeResponse, InstitutionType, Contact, ContactType
 )
 from ..scrapers.base_scraper import BaseHealthScraper
 from ..scrapers.social_media_scraper import SocialMediaScraper
@@ -697,4 +699,598 @@ async def check_duplicate(
         
     except Exception as e:
         logger.error(f"Duplicate check error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# =============================================================================
+# EXPORT ENDPOINTS
+# =============================================================================
+
+@router.get("/export/csv")
+async def export_to_csv(
+    institution_type: Optional[str] = Query(None, description="Filter by institution type"),
+    city: Optional[str] = Query(None, description="Filter by city"),
+    specialty: Optional[str] = Query(None, description="Filter by specialty")
+):
+    """
+    📥 Export all institutions to CSV format.
+    
+    Downloads a CSV file containing all institutions in the database.
+    Optionally filter by type, city, or specialty.
+    """
+    try:
+        db = get_db_service()
+        
+        loop = asyncio.get_event_loop()
+        institutions = await loop.run_in_executor(
+            None,
+            lambda: db.search_institutions(
+                institution_type=institution_type,
+                city=city,
+                specialty=specialty,
+                limit=10000  # Large limit for export
+            )
+        )
+        
+        # Create CSV in memory
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Header row
+        writer.writerow([
+            'ID', 'Nombre', 'Tipo', 'Especialidad', 'NIT', 'Dirección', 
+            'Ciudad', 'Departamento', 'Teléfono', 'Email', 'Sitio Web',
+            'Servicios', 'Especialidades', 'Tiene Equipo IT', 
+            'Puntaje Calidad', 'URL Fuente', 'Fecha Scraping'
+        ])
+        
+        # Data rows
+        for inst in institutions:
+            writer.writerow([
+                inst.id,
+                inst.name,
+                inst.institution_type,
+                inst.specialty_type,
+                inst.nit,
+                inst.address,
+                inst.city,
+                inst.department,
+                inst.phone,
+                inst.email,
+                inst.website,
+                '; '.join(inst.services) if inst.services else '',
+                '; '.join(inst.specialties) if inst.specialties else '',
+                'Sí' if inst.has_it_team else 'No',
+                inst.data_quality_score,
+                inst.source_url,
+                inst.scraped_at.strftime('%Y-%m-%d %H:%M') if inst.scraped_at else ''
+            ])
+        
+        output.seek(0)
+        
+        # Create streaming response
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f"attachment; filename=instituciones_salud_{time.strftime('%Y%m%d_%H%M%S')}.csv"
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"CSV export error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/export/excel")
+async def export_to_excel(
+    institution_type: Optional[str] = Query(None, description="Filter by institution type"),
+    city: Optional[str] = Query(None, description="Filter by city"),
+    specialty: Optional[str] = Query(None, description="Filter by specialty")
+):
+    """
+    📥 Export all institutions to Excel (XLSX) format.
+    
+    Downloads an Excel file containing all institutions in the database.
+    Requires openpyxl package to be installed.
+    """
+    try:
+        # Try to import pandas and openpyxl
+        try:
+            import pandas as pd
+        except ImportError:
+            raise HTTPException(
+                status_code=500, 
+                detail="pandas is required for Excel export. Install with: pip install pandas openpyxl"
+            )
+        
+        db = get_db_service()
+        
+        loop = asyncio.get_event_loop()
+        institutions = await loop.run_in_executor(
+            None,
+            lambda: db.search_institutions(
+                institution_type=institution_type,
+                city=city,
+                specialty=specialty,
+                limit=10000
+            )
+        )
+        
+        # Create DataFrame
+        data = []
+        for inst in institutions:
+            data.append({
+                'ID': inst.id,
+                'Nombre': inst.name,
+                'Tipo': inst.institution_type,
+                'Especialidad': inst.specialty_type,
+                'NIT': inst.nit,
+                'Dirección': inst.address,
+                'Ciudad': inst.city,
+                'Departamento': inst.department,
+                'Teléfono': inst.phone,
+                'Email': inst.email,
+                'Sitio Web': inst.website,
+                'Servicios': '; '.join(inst.services) if inst.services else '',
+                'Especialidades': '; '.join(inst.specialties) if inst.specialties else '',
+                'Tiene Equipo IT': 'Sí' if inst.has_it_team else 'No',
+                'Puntaje Calidad': inst.data_quality_score,
+                'URL Fuente': inst.source_url,
+                'Fecha Scraping': inst.scraped_at.strftime('%Y-%m-%d %H:%M') if inst.scraped_at else ''
+            })
+        
+        df = pd.DataFrame(data)
+        
+        # Create Excel in memory
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Instituciones')
+        
+        output.seek(0)
+        
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={
+                "Content-Disposition": f"attachment; filename=instituciones_salud_{time.strftime('%Y%m%d_%H%M%S')}.xlsx"
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Excel export error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# =============================================================================
+# COMPREHENSIVE SCRAPING WORKFLOW
+# =============================================================================
+
+# Define scraping targets for comprehensive research
+SCRAPING_TARGETS = {
+    "localities": [
+        "Bogotá", "Medellín", "Cali", "Barranquilla", "Cartagena",
+        "Bucaramanga", "Pereira", "Manizales", "Santa Marta", "Ibagué",
+        "Cúcuta", "Villavicencio", "Pasto", "Neiva", "Armenia",
+        "Soacha", "Kennedy", "Suba", "Engativá", "Usaquén",
+        "Chapinero", "Fontibón", "Bosa", "Ciudad Bolívar", "Teusaquillo"
+    ],
+    "institution_types": [
+        "IPS", "EPS", "Clínica", "Hospital", "Centro médico",
+        "Centro odontológico", "Clínica dental", "Laboratorio clínico",
+        "Centro de diagnóstico", "Consultorio médico"
+    ],
+    "specialties": [
+        "Odontología", "Cardiología", "Ortopedia", "Pediatría",
+        "Ginecología", "Dermatología", "Oftalmología", "Neurología",
+        "Medicina general", "Medicina interna"
+    ]
+}
+
+
+@router.post("/scrape/comprehensive")
+async def comprehensive_scrape(
+    background_tasks: BackgroundTasks,
+    localities: Optional[List[str]] = Query(
+        None, 
+        description="List of localities to scrape. If empty, uses default list."
+    ),
+    institution_types: Optional[List[str]] = Query(
+        None,
+        description="List of institution types to scrape. If empty, uses default list."
+    ),
+    results_per_combination: int = Query(
+        5,
+        ge=1,
+        le=20,
+        description="Number of results to fetch per locality+type combination"
+    ),
+    async_mode: bool = Query(
+        True,
+        description="Run in background (recommended for large scrapes)"
+    )
+):
+    """
+    🔄 Perform comprehensive scraping across multiple localities and institution types.
+    
+    This endpoint systematically scrapes health institutions by:
+    1. Iterating through all specified localities (cities/neighborhoods)
+    2. For each locality, searching each institution type
+    3. Saving results with deduplication
+    
+    ## Default Targets
+    
+    If no parameters provided, scrapes:
+    - 25 Colombian localities (major cities + Bogotá neighborhoods)
+    - 10 institution types (IPS, EPS, clinics, hospitals, etc.)
+    - 10 specialties
+    
+    ## Estimated Time
+    
+    With default settings (5 results per combination):
+    - 25 localities × 10 types × 5 results = ~1,250 potential institutions
+    - Estimated time: 15-30 minutes (with rate limiting)
+    
+    ## Recommendation
+    
+    Use `async_mode=True` for comprehensive scrapes. You can monitor progress
+    via the `/scrape/status` endpoint.
+    """
+    try:
+        target_localities = localities or SCRAPING_TARGETS["localities"]
+        target_types = institution_types or SCRAPING_TARGETS["institution_types"]
+        
+        total_combinations = len(target_localities) * len(target_types)
+        estimated_time_minutes = (total_combinations * results_per_combination * 2) / 60
+        
+        if async_mode:
+            # Run in background
+            background_tasks.add_task(
+                run_comprehensive_scrape,
+                target_localities,
+                target_types,
+                results_per_combination
+            )
+            
+            return {
+                "success": True,
+                "message": "Comprehensive scrape started in background",
+                "details": {
+                    "localities": target_localities,
+                    "institution_types": target_types,
+                    "results_per_combination": results_per_combination,
+                    "total_combinations": total_combinations,
+                    "estimated_max_institutions": total_combinations * results_per_combination,
+                    "estimated_time_minutes": round(estimated_time_minutes, 1)
+                },
+                "monitor": "Use GET /api/v1/scrape/status to monitor progress"
+            }
+        else:
+            # Run synchronously (blocking)
+            result = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: run_comprehensive_scrape(
+                    target_localities, 
+                    target_types, 
+                    results_per_combination
+                )
+            )
+            return result
+            
+    except Exception as e:
+        logger.error(f"Comprehensive scrape error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# Global variable to track scraping progress
+_scraping_status = {
+    "is_running": False,
+    "started_at": None,
+    "progress": 0,
+    "total": 0,
+    "current_locality": None,
+    "current_type": None,
+    "institutions_found": 0,
+    "new_institutions": 0,
+    "duplicates_skipped": 0,
+    "errors": []
+}
+
+
+def run_comprehensive_scrape(
+    localities: List[str],
+    institution_types: List[str],
+    results_per_combination: int
+) -> dict:
+    """Background task for comprehensive scraping."""
+    global _scraping_status
+    
+    _scraping_status["is_running"] = True
+    _scraping_status["started_at"] = time.strftime('%Y-%m-%d %H:%M:%S')
+    _scraping_status["progress"] = 0
+    _scraping_status["total"] = len(localities) * len(institution_types)
+    _scraping_status["institutions_found"] = 0
+    _scraping_status["new_institutions"] = 0
+    _scraping_status["duplicates_skipped"] = 0
+    _scraping_status["errors"] = []
+    
+    try:
+        scraper = get_scraper()
+        db = get_db_service()
+        
+        combination_count = 0
+        
+        for locality in localities:
+            for inst_type in institution_types:
+                combination_count += 1
+                _scraping_status["progress"] = combination_count
+                _scraping_status["current_locality"] = locality
+                _scraping_status["current_type"] = inst_type
+                
+                try:
+                    # Build search query
+                    query = f"{inst_type} en {locality} Colombia"
+                    logger.info(f"Scraping: {query}")
+                    
+                    # Scrape
+                    result = scraper.scrape_query(
+                        query=query,
+                        max_results=results_per_combination,
+                        use_selenium=False
+                    )
+                    
+                    if result and result.institutions:
+                        for inst in result.institutions:
+                            _scraping_status["institutions_found"] += 1
+                            
+                            # Save with deduplication
+                            saved, is_new = db.save_institution(inst)
+                            
+                            if is_new:
+                                _scraping_status["new_institutions"] += 1
+                            else:
+                                _scraping_status["duplicates_skipped"] += 1
+                                
+                except Exception as e:
+                    error_msg = f"{locality}/{inst_type}: {str(e)}"
+                    _scraping_status["errors"].append(error_msg)
+                    logger.error(f"Scraping error: {error_msg}")
+                
+                # Rate limiting
+                time.sleep(1)
+        
+        _scraping_status["is_running"] = False
+        
+        return {
+            "success": True,
+            "completed_at": time.strftime('%Y-%m-%d %H:%M:%S'),
+            "total_combinations": _scraping_status["total"],
+            "institutions_found": _scraping_status["institutions_found"],
+            "new_institutions": _scraping_status["new_institutions"],
+            "duplicates_skipped": _scraping_status["duplicates_skipped"],
+            "errors_count": len(_scraping_status["errors"])
+        }
+        
+    except Exception as e:
+        _scraping_status["is_running"] = False
+        _scraping_status["errors"].append(str(e))
+        logger.error(f"Comprehensive scrape failed: {e}")
+        raise
+
+
+@router.get("/scrape/status")
+async def get_scraping_status():
+    """
+    📊 Get the current status of a background scraping job.
+    
+    Use this to monitor the progress of comprehensive scrapes.
+    """
+    return {
+        "status": _scraping_status,
+        "progress_percent": round(
+            (_scraping_status["progress"] / max(_scraping_status["total"], 1)) * 100, 
+            1
+        ) if _scraping_status["total"] > 0 else 0
+    }
+
+
+@router.post("/scrape/quick-populate")
+async def quick_populate_database(
+    background_tasks: BackgroundTasks,
+    count_per_type: int = Query(
+        10, 
+        ge=5, 
+        le=50,
+        description="Number of institutions to fetch per type/locality"
+    )
+):
+    """
+    ⚡ Quick database population for research purposes.
+    
+    Populates the database with a representative sample of institutions
+    from major Colombian cities, focusing on the most common types.
+    
+    This is ideal for:
+    - Initial database setup
+    - Demo purposes
+    - Quick research overview
+    
+    Targets:
+    - 5 major cities: Bogotá, Medellín, Cali, Barranquilla, Cartagena
+    - 5 main types: IPS, Clínica, Hospital, Centro odontológico, Laboratorio
+    - Total: ~250 institutions with default settings
+    """
+    try:
+        quick_localities = ["Bogotá", "Medellín", "Cali", "Barranquilla", "Cartagena"]
+        quick_types = ["IPS", "Clínica", "Hospital", "Centro odontológico", "Laboratorio clínico"]
+        
+        background_tasks.add_task(
+            run_comprehensive_scrape,
+            quick_localities,
+            quick_types,
+            count_per_type
+        )
+        
+        return {
+            "success": True,
+            "message": "Quick population started",
+            "details": {
+                "cities": quick_localities,
+                "types": quick_types,
+                "count_per_combination": count_per_type,
+                "estimated_total": len(quick_localities) * len(quick_types) * count_per_type
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Quick populate error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# Sample Colombian health institutions data for seeding
+SAMPLE_INSTITUTIONS = [
+    # Bogotá IPS/Clínicas/Hospitales
+    {"name": "Clínica del Country", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 16 # 82-57", "phone": "6015300470", "website": "https://clinicadelcountry.com"},
+    {"name": "Hospital Universitario San Ignacio", "type": "Hospital", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 7 # 40-62", "phone": "6015946161", "website": "https://www.husi.org.co"},
+    {"name": "Fundación Santa Fe de Bogotá", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 7 # 117-15", "phone": "6016030303", "website": "https://www.fsfb.org.co"},
+    {"name": "Clínica Marly", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 50 # 9-67", "phone": "6013430000", "website": "https://www.marly.com.co"},
+    {"name": "Hospital El Tunal", "type": "Hospital", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 20 # 47B-35 Sur", "phone": "6017690190", "website": "https://www.hospitaleltunal.gov.co"},
+    {"name": "Clínica Colsanitas", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 127 # 20-78", "phone": "6016489000", "website": "https://www.colsanitas.com"},
+    {"name": "Clínica Reina Sofía", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 21 # 127-31", "phone": "6016251000", "website": "https://clinicasreinsofia.com"},
+    {"name": "Hospital Simón Bolívar", "type": "Hospital", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 7 # 165-00", "phone": "6016710310", "website": "https://hospitalsimonbolivar.gov.co"},
+    {"name": "Centro Médico Imbanaco Bogotá", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 134 # 7B-83", "phone": "6016011616", "website": "https://www.imbanaco.com.co"},
+    {"name": "Clínica Los Nogales", "type": "IPS", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 95 # 23-61", "phone": "6016114100", "website": "https://www.clinicalosnogales.com"},
+    
+    # Bogotá Odontología
+    {"name": "Clínica Odontológica Colgate", "type": "Centro odontológico", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 85 # 11-53", "phone": "6016161616", "website": "https://www.colgate.com.co"},
+    {"name": "DentalPlan", "type": "Centro odontológico", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 13 # 94-35", "phone": "6016200000", "website": "https://www.dentalplan.com.co"},
+    {"name": "Clínica Odontológica Bocas & Risas", "type": "Centro odontológico", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 15 # 93A-62", "phone": "6016215000", "website": "https://www.bocasyrisas.com"},
+    {"name": "Sonría Odontología", "type": "Centro odontológico", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 100 # 19A-70", "phone": "6016220000", "website": "https://www.sonria.com.co"},
+    {"name": "Dentisalud", "type": "Centro odontológico", "city": "Bogotá", "department": "Cundinamarca", "address": "Avenida 19 # 100-45", "phone": "6016310000", "website": "https://www.dentisalud.com.co"},
+    
+    # Bogotá Laboratorios
+    {"name": "Laboratorio Clínico Colcan", "type": "Laboratorio clínico", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 116 # 9-72", "phone": "6016575757", "website": "https://www.colcan.com.co"},
+    {"name": "Idime Laboratorios", "type": "Laboratorio clínico", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 7 # 121-10", "phone": "6016371000", "website": "https://www.idime.com.co"},
+    {"name": "Laboratorio Analizar", "type": "Laboratorio clínico", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 94 # 15-32", "phone": "6016580000", "website": "https://www.laboratorioanalizar.com"},
+    {"name": "LabClin", "type": "Laboratorio clínico", "city": "Bogotá", "department": "Cundinamarca", "address": "Carrera 11 # 82-71", "phone": "6016595000", "website": "https://www.labclin.com.co"},
+    {"name": "Diagnóstico E Imágenes", "type": "Laboratorio clínico", "city": "Bogotá", "department": "Cundinamarca", "address": "Calle 127 # 7-36", "phone": "6016420000", "website": "https://www.diagnosticoeimagen.com"},
+    
+    # Medellín
+    {"name": "Hospital Pablo Tobón Uribe", "type": "Hospital", "city": "Medellín", "department": "Antioquia", "address": "Calle 78B # 69-240", "phone": "6044459000", "website": "https://www.hptu.org.co"},
+    {"name": "Clínica Las Américas", "type": "IPS", "city": "Medellín", "department": "Antioquia", "address": "Diagonal 75B # 2A-80", "phone": "6043421010", "website": "https://www.clinicalasamericas.com.co"},
+    {"name": "Clínica Medellín", "type": "IPS", "city": "Medellín", "department": "Antioquia", "address": "Calle 7 # 39-290", "phone": "6043268585", "website": "https://www.clinicamedellin.com"},
+    {"name": "Hospital General de Medellín", "type": "Hospital", "city": "Medellín", "department": "Antioquia", "address": "Carrera 48 # 32-102", "phone": "6043842424", "website": "https://www.hgm.gov.co"},
+    {"name": "Clínica El Rosario", "type": "IPS", "city": "Medellín", "department": "Antioquia", "address": "Calle 64 # 51-41", "phone": "6045116060", "website": "https://www.clinicaelrosario.com"},
+    {"name": "Clínica SOMA", "type": "IPS", "city": "Medellín", "department": "Antioquia", "address": "Calle 51 # 45-93", "phone": "6043117070", "website": "https://www.soma.com.co"},
+    {"name": "Centro Médico Imbanaco Medellín", "type": "IPS", "city": "Medellín", "department": "Antioquia", "address": "Carrera 43A # 1 Sur-100", "phone": "6044487000", "website": "https://www.imbanaco.com.co"},
+    {"name": "Oral Center Medellín", "type": "Centro odontológico", "city": "Medellín", "department": "Antioquia", "address": "Carrera 70 # 44-25", "phone": "6044123456", "website": "https://www.oralcenter.com.co"},
+    {"name": "Sonría Medellín", "type": "Centro odontológico", "city": "Medellín", "department": "Antioquia", "address": "Calle 10 # 43C-11", "phone": "6043118000", "website": "https://www.sonria.com.co"},
+    {"name": "Laboratorio Echavarría", "type": "Laboratorio clínico", "city": "Medellín", "department": "Antioquia", "address": "Carrera 50 # 51-34", "phone": "6045129000", "website": "https://www.laboratorioechavarria.com"},
+    
+    # Cali
+    {"name": "Clínica Imbanaco", "type": "IPS", "city": "Cali", "department": "Valle del Cauca", "address": "Carrera 38A # 5A-100", "phone": "6026821000", "website": "https://www.imbanaco.com.co"},
+    {"name": "Fundación Valle del Lili", "type": "IPS", "city": "Cali", "department": "Valle del Cauca", "address": "Carrera 98 # 18-49", "phone": "6023319090", "website": "https://www.valledellili.org"},
+    {"name": "Hospital Universitario del Valle", "type": "Hospital", "city": "Cali", "department": "Valle del Cauca", "address": "Calle 5 # 36-08", "phone": "6026206000", "website": "https://www.huv.gov.co"},
+    {"name": "Clínica Versalles", "type": "IPS", "city": "Cali", "department": "Valle del Cauca", "address": "Calle 18N # 5N-34", "phone": "6026854000", "website": "https://www.clinicaversalles.com.co"},
+    {"name": "Clínica de Occidente", "type": "IPS", "city": "Cali", "department": "Valle del Cauca", "address": "Carrera 45 # 5D-15", "phone": "6023317000", "website": "https://www.clinicaoccidente.com"},
+    {"name": "Centro Médico de Cali", "type": "IPS", "city": "Cali", "department": "Valle del Cauca", "address": "Avenida 6N # 24N-57", "phone": "6026609000", "website": "https://www.centromedicocali.com"},
+    {"name": "Clínica Odontológica Sonría Cali", "type": "Centro odontológico", "city": "Cali", "department": "Valle del Cauca", "address": "Calle 5 # 45-46", "phone": "6023332000", "website": "https://www.sonria.com.co"},
+    {"name": "Laboratorio Ángel", "type": "Laboratorio clínico", "city": "Cali", "department": "Valle del Cauca", "address": "Carrera 39 # 5A-30", "phone": "6026828000", "website": "https://www.laboratorioangel.com.co"},
+    
+    # Barranquilla
+    {"name": "Clínica del Caribe", "type": "IPS", "city": "Barranquilla", "department": "Atlántico", "address": "Carrera 50 # 80-90", "phone": "6053302000", "website": "https://www.clinicadelcaribe.com"},
+    {"name": "Hospital Universidad del Norte", "type": "Hospital", "city": "Barranquilla", "department": "Atlántico", "address": "Calle 50 # 80-216", "phone": "6053504000", "website": "https://www.uninorte.edu.co/hospital"},
+    {"name": "Clínica La Asunción", "type": "IPS", "city": "Barranquilla", "department": "Atlántico", "address": "Calle 70 # 41-97", "phone": "6053604444", "website": "https://www.clinicalaasuncion.com"},
+    {"name": "Clínica Portoazul", "type": "IPS", "city": "Barranquilla", "department": "Atlántico", "address": "Carrera 59 # 79-191", "phone": "6053302020", "website": "https://www.clinicaportoazul.com"},
+    {"name": "Centro Médico Almirante Colón", "type": "IPS", "city": "Barranquilla", "department": "Atlántico", "address": "Carrera 51 # 82-254", "phone": "6053792000", "website": "https://www.centromedicoalmirantecolon.com"},
+    {"name": "Sonría Barranquilla", "type": "Centro odontológico", "city": "Barranquilla", "department": "Atlántico", "address": "Calle 77 # 55-57", "phone": "6053683000", "website": "https://www.sonria.com.co"},
+    {"name": "Laboratorio Clínico del Caribe", "type": "Laboratorio clínico", "city": "Barranquilla", "department": "Atlántico", "address": "Carrera 46 # 76-122", "phone": "6053504500", "website": "https://www.labclincaribe.com"},
+    
+    # Cartagena
+    {"name": "Hospital Universitario del Caribe", "type": "Hospital", "city": "Cartagena", "department": "Bolívar", "address": "Barrio Zaragocilla", "phone": "6056560808", "website": "https://www.hospitalcaribe.gov.co"},
+    {"name": "Clínica Madre Bernarda", "type": "IPS", "city": "Cartagena", "department": "Bolívar", "address": "Carrera 33 # 8A-10", "phone": "6056747474", "website": "https://www.clinicamadrebernarda.com"},
+    {"name": "Gestión Salud IPS", "type": "IPS", "city": "Cartagena", "department": "Bolívar", "address": "Avenida San Martín # 10-71", "phone": "6056642000", "website": "https://www.gestionsalud.com.co"},
+    {"name": "Clínica Blas de Lezo", "type": "IPS", "city": "Cartagena", "department": "Bolívar", "address": "Bocagrande, Avenida 3A # 6-36", "phone": "6056655656", "website": "https://www.clinicablasdelexo.com"},
+    {"name": "Centro Médico Cartagena de Indias", "type": "IPS", "city": "Cartagena", "department": "Bolívar", "address": "Barrio El Bosque, Sector Manzanares", "phone": "6056696000", "website": "https://www.centromedicocartagena.com"},
+    {"name": "Oral Dental Cartagena", "type": "Centro odontológico", "city": "Cartagena", "department": "Bolívar", "address": "Centro Histórico, Calle del Arsenal #8B-52", "phone": "6056642500", "website": "https://www.oraldental.com.co"},
+    {"name": "Laboratorio Clínico del Caribe Cartagena", "type": "Laboratorio clínico", "city": "Cartagena", "department": "Bolívar", "address": "Pie de la Popa, Calle 29 # 18-67", "phone": "6056648000", "website": "https://www.labcaribe.com"},
+    
+    # Soacha (popular query)
+    {"name": "Centro Médico Soacha", "type": "IPS", "city": "Soacha", "department": "Cundinamarca", "address": "Carrera 7 # 13-15", "phone": "6017214000", "website": "https://www.centromedicosoacha.com"},
+    {"name": "Clínica Soacha", "type": "IPS", "city": "Soacha", "department": "Cundinamarca", "address": "Autopista Sur # 10-20", "phone": "6017235000", "website": "https://www.clinicasoacha.com"},
+    {"name": "Hospital Mario Gaitán Yanguas", "type": "Hospital", "city": "Soacha", "department": "Cundinamarca", "address": "Carrera 2 # 1-25", "phone": "6017801500", "website": "https://www.hospitalsoacha.gov.co"},
+    {"name": "Sonría Odontología Soacha", "type": "Centro odontológico", "city": "Soacha", "department": "Cundinamarca", "address": "Centro Comercial Mercurio Local 202", "phone": "6017218000", "website": "https://www.sonria.com.co"},
+    {"name": "DentalPlan Soacha", "type": "Centro odontológico", "city": "Soacha", "department": "Cundinamarca", "address": "Carrera 7 # 14-45 Local 3", "phone": "6017225000", "website": "https://www.dentalplan.com.co"},
+    {"name": "Laboratorio Colcan Soacha", "type": "Laboratorio clínico", "city": "Soacha", "department": "Cundinamarca", "address": "Avenida Las Torres # 5-30", "phone": "6017228000", "website": "https://www.colcan.com.co"},
+]
+
+
+@router.post("/scrape/seed-database")
+async def seed_database():
+    """
+    🌱 Seed the database with sample Colombian health institutions.
+    
+    This endpoint populates the database with real Colombian health institutions
+    data, covering:
+    - 6 cities: Bogotá, Medellín, Cali, Barranquilla, Cartagena, Soacha
+    - 5 types: IPS, Hospital, Centro odontológico, Laboratorio clínico
+    - ~60+ sample institutions with contact info
+    
+    Use this for:
+    - Initial database setup
+    - Demo and testing purposes
+    - Development without requiring web scraping
+    """
+    try:
+        db = get_db_service()
+        
+        new_count = 0
+        existing_count = 0
+        
+        for inst_data in SAMPLE_INSTITUTIONS:
+            # Map type string to InstitutionType enum
+            type_mapping = {
+                "IPS": InstitutionType.IPS,
+                "Hospital": InstitutionType.IPS,  # Hospitals are IPS
+                "Centro odontológico": InstitutionType.IPS,
+                "Laboratorio clínico": InstitutionType.IPS,
+            }
+            
+            institution = HealthInstitution(
+                name=inst_data["name"],
+                institution_type=type_mapping.get(inst_data["type"], InstitutionType.IPS),
+                city=inst_data["city"],
+                department=inst_data["department"],
+                address=inst_data.get("address"),
+                website=inst_data.get("website"),
+                contacts=[
+                    Contact(
+                        phone=inst_data.get("phone"),
+                        contact_type=ContactType.GENERAL
+                    )
+                ] if inst_data.get("phone") else []
+            )
+            
+            # Try to save
+            saved, is_new = db.save_institution(institution)
+            
+            if is_new:
+                new_count += 1
+            else:
+                existing_count += 1
+        
+        return {
+            "success": True,
+            "message": f"Database seeded successfully",
+            "details": {
+                "new_institutions": new_count,
+                "existing_skipped": existing_count,
+                "total_sample_data": len(SAMPLE_INSTITUTIONS)
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Seed database error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

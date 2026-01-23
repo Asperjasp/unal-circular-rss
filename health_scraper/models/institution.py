@@ -267,6 +267,7 @@ class HealthInstitution(BaseModel):
 class ScrapeResult(BaseModel):
     success: bool
     institution: Optional[HealthInstitution] = None
+    institutions: Optional[List["HealthInstitution"]] = None  # For multi-result queries
     error_message: Optional[str] = None
     scraped_urls: List[str] = []
     processing_time: Optional[float] = None

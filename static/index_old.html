@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Instituciones de Salud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .search-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-section h1 {
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .logo-section p {
+            color: #666;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            padding-right: 60px;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            padding: 0;
+        }
+        
+        .example-queries {
+            margin-top: 1rem;
+        }
+        
+        .example-queries .badge {
+            cursor: pointer;
+            margin: 0.2rem;
+            padding: 0.5rem 1rem;
+            font-weight: normal;
+            transition: all 0.2s;
+        }
+        
+        .example-queries .badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .results-section {
+            margin-top: 2rem;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .institution-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .type-ips { background: #d1e7dd; color: #0f5132; }
+        .type-eps { background: #cff4fc; color: #055160; }
+        .type-clinica { background: #f8d7da; color: #842029; }
+        .type-odontologia { background: #fff3cd; color: #664d03; }
+        .type-default { background: #e2e3e5; color: #41464b; }
+        
+        .contact-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .contact-info i {
+            width: 20px;
+            color: var(--primary-color);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner-grow {
+            width: 1rem;
+            height: 1rem;
+            margin: 0 0.2rem;
+        }
+        
+        .stats-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .parsed-query {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .filter-section {
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .search-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Stats Bar -->
+        <div class="stats-bar d-flex justify-content-between align-items-center">
+            <div>
+                <i class="bi bi-hospital"></i>
+                <span id="total-institutions">0</span> instituciones en base de datos
+            </div>
+            <div>
+                <i class="bi bi-search"></i>
+                <span id="total-searches">0</span> búsquedas realizadas
+            </div>
+        </div>
+        
+        <!-- Search Card -->
+        <div class="search-card">
+            <div class="logo-section">
+                <h1><i class="bi bi-heart-pulse"></i> Buscador de Salud</h1>
+                <p>Encuentra clínicas, consultorios, IPS, EPS y centros de salud en Colombia</p>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" 
+                       id="search-input" 
+                       class="form-control form-control-lg" 
+                       placeholder="Ej: Odontología especializada en implantes cerca de Soacha..."
+                       autocomplete="off">
+                <button class="btn btn-primary" onclick="performSearch()" id="search-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            
+            <div class="example-queries">
+                <small class="text-muted">Ejemplos de búsqueda:</small>
+                <div class="mt-2">
+                    <span class="badge bg-primary" onclick="setQuery('Clínica dental en Bogotá')">Clínica dental en Bogotá</span>
+                    <span class="badge bg-success" onclick="setQuery('Ortopedia cerca de Medellín')">Ortopedia cerca de Medellín</span>
+                    <span class="badge bg-info" onclick="setQuery('IPS con cardiología en Cali')">IPS con cardiología en Cali</span>
+                    <span class="badge bg-warning text-dark" onclick="setQuery('Centro odontológico implantes')">Centro odontológico implantes</span>
+                    <span class="badge bg-secondary" onclick="setQuery('Dermatología en Barranquilla')">Dermatología en Barranquilla</span>
+                </div>
+            </div>
+            
+            <!-- Parsed Query Display -->
+            <div class="parsed-query" id="parsed-query" style="display: none;">
+                <strong><i class="bi bi-cpu"></i> Búsqueda interpretada:</strong>
+                <div id="parsed-query-content"></div>
+            </div>
+            
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <select class="form-select" id="filter-type">
+                            <option value="">Todos los tipos</option>
+                            <option value="IPS">IPS</option>
+                            <option value="EPS">EPS</option>
+                            <option value="CLINICA_GENERAL">Clínica General</option>
+                            <option value="CLINICA_DENTAL">Clínica Dental</option>
+                            <option value="CENTRO_ODONTOLOGICO">Centro Odontológico</option>
+                            <option value="CONSULTORIO_ODONTOLOGICO">Consultorio Odontológico</option>
+                            <option value="HOSPITAL">Hospital</option>
+                            <option value="LABORATORIO">Laboratorio</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="filter-city">
+                            <option value="">Todas las ciudades</option>
+                            <option value="Bogotá">Bogotá</option>
+                            <option value="Medellín">Medellín</option>
+                            <option value="Cali">Cali</option>
+                            <option value="Barranquilla">Barranquilla</option>
+                            <option value="Cartagena">Cartagena</option>
+                            <option value="Soacha">Soacha</option>
+                            <option value="Bucaramanga">Bucaramanga</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100" onclick="applyFilters()">
+                            <i class="bi bi-funnel"></i> Aplicar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner-grow text-light" role="status"></div>
+            <div class="spinner-grow text-light" role="status"></div>
+            <div class="spinner-grow text-light" role="status"></div>
+            <p class="text-white mt-3">Buscando instituciones de salud...</p>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="results-section" id="results-section" style="display: none;">
+            <h4 class="text-white mb-3">
+                <i class="bi bi-list-check"></i> 
+                <span id="results-count">0</span> resultados encontrados
+            </h4>
+            <div id="results-container"></div>
+        </div>
+        
+        <!-- No Results -->
+        <div class="search-card no-results" id="no-results" style="display: none;">
+            <i class="bi bi-search" style="font-size: 3rem; color: #ccc;"></i>
+            <h4 class="mt-3">No se encontraron resultados</h4>
+            <p class="text-muted">Intenta con otros términos de búsqueda o realiza un scraping para obtener nuevos datos.</p>
+            <button class="btn btn-primary" onclick="performScraping()">
+                <i class="bi bi-cloud-download"></i> Buscar en Internet
+            </button>
+        </div>
+    </div>
+    
+    <!-- Toast for notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="notification-toast" class="toast" role="alert">
+            <div class="toast-header">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong class="me-auto" id="toast-title">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toast-message"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = window.location.origin + '/api/v1';
+        
+        // Load stats on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            
+            // Enter key to search
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+        });
+        
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/database/statistics`);
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('total-institutions').textContent = stats.total_institutions || 0;
+                    document.getElementById('total-searches').textContent = stats.total_searches || 0;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        function setQuery(query) {
+            document.getElementById('search-input').value = query;
+            performSearch();
+        }
+        
+        async function performSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) {
+                showToast('Aviso', 'Por favor ingresa un término de búsqueda');
+                return;
+            }
+            
+            showLoading(true);
+            hideResults();
+            
+            try {
+                // First, parse the query to show interpretation
+                const parseResponse = await fetch(`${API_BASE}/search/parse?query=${encodeURIComponent(query)}`);
+                if (parseResponse.ok) {
+                    const parsed = await parseResponse.json();
+                    showParsedQuery(parsed);
+                }
+                
+                // Then perform the search
+                const searchResponse = await fetch(`${API_BASE}/search/prompt?query=${encodeURIComponent(query)}`, {
+                    method: 'POST'
+                });
+                
+                if (searchResponse.ok) {
+                    const results = await searchResponse.json();
+                    displayResults(results);
+                } else {
+                    showToast('Error', 'Error al realizar la búsqueda');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showToast('Error', 'Error de conexión. Intenta de nuevo.');
+            } finally {
+                showLoading(false);
+                loadStats();
+            }
+        }
+        
+        async function applyFilters() {
+            const type = document.getElementById('filter-type').value;
+            const city = document.getElementById('filter-city').value;
+            
+            showLoading(true);
+            hideResults();
+            
+            try {
+                let url = `${API_BASE}/database/institutions?limit=50`;
+                if (type) url += `&institution_type=${type}`;
+                if (city) url += `&city=${city}`;
+                
+                const response = await fetch(url);
+                if (response.ok) {
+                    const institutions = await response.json();
+                    displayResults({ 
+                        results: institutions.map(i => ({ institution: i, score: 1.0, source: 'database' })),
+                        total_results: institutions.length 
+                    });
+                }
+            } catch (error) {
+                showToast('Error', 'Error al aplicar filtros');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function performScraping() {
+            const query = document.getElementById('search-input').value.trim() || 'clínicas de salud en Colombia';
+            
+            showLoading(true);
+            showToast('Buscando', 'Realizando búsqueda en Internet... Esto puede tomar unos segundos.');
+            
+            try {
+                const response = await fetch(`${API_BASE}/scrape`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: query,
+                        max_results: 20,
+                        use_selenium: false
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    showToast('Éxito', `Se encontraron ${result.institutions_found || 0} instituciones`);
+                    performSearch(); // Refresh search
+                } else {
+                    showToast('Error', 'Error al realizar el scraping');
+                }
+            } catch (error) {
+                showToast('Error', 'Error de conexión');
+            } finally {
+                showLoading(false);
+                loadStats();
+            }
+        }
+        
+        function showParsedQuery(parsed) {
+            const container = document.getElementById('parsed-query');
+            const content = document.getElementById('parsed-query-content');
+            
+            let html = '<div class="mt-2">';
+            if (parsed.specialty) html += `<span class="badge bg-primary me-2">Especialidad: ${parsed.specialty}</span>`;
+            if (parsed.treatment) html += `<span class="badge bg-success me-2">Tratamiento: ${parsed.treatment}</span>`;
+            if (parsed.location) html += `<span class="badge bg-info me-2">Ubicación: ${parsed.location}</span>`;
+            if (parsed.institution_type) html += `<span class="badge bg-warning text-dark me-2">Tipo: ${parsed.institution_type}</span>`;
+            html += '</div>';
+            
+            content.innerHTML = html;
+            container.style.display = 'block';
+        }
+        
+        function displayResults(data) {
+            const results = data.results || data.database_results || [];
+            const container = document.getElementById('results-container');
+            const section = document.getElementById('results-section');
+            const noResults = document.getElementById('no-results');
+            
+            if (results.length === 0) {
+                section.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            section.style.display = 'block';
+            document.getElementById('results-count').textContent = results.length;
+            
+            container.innerHTML = results.map(result => {
+                const inst = result.institution || result;
+                return createResultCard(inst, result.score, result.source);
+            }).join('');
+        }
+        
+        function createResultCard(inst, score, source) {
+            const typeClass = getTypeClass(inst.institution_type);
+            const scorePercent = score ? Math.round(score * 100) : null;
+            
+            return `
+                <div class="result-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="institution-type ${typeClass}">${formatType(inst.institution_type)}</span>
+                            ${inst.specialty_type ? `<span class="institution-type type-default">${inst.specialty_type}</span>` : ''}
+                            <h5 class="mb-2">${inst.name || 'Sin nombre'}</h5>
+                        </div>
+                        ${scorePercent ? `<span class="badge bg-success">${scorePercent}% match</span>` : ''}
+                    </div>
+                    
+                    <div class="contact-info">
+                        ${inst.address ? `<div><i class="bi bi-geo-alt"></i> ${inst.address}${inst.city ? `, ${inst.city}` : ''}</div>` : ''}
+                        ${inst.contact?.phone ? `<div><i class="bi bi-telephone"></i> ${inst.contact.phone}</div>` : ''}
+                        ${inst.contact?.email ? `<div><i class="bi bi-envelope"></i> ${inst.contact.email}</div>` : ''}
+                        ${inst.contact?.website ? `<div><i class="bi bi-globe"></i> <a href="${inst.contact.website}" target="_blank">${inst.contact.website}</a></div>` : ''}
+                    </div>
+                    
+                    ${inst.services && inst.services.length > 0 ? `
+                        <div class="mt-2">
+                            ${inst.services.slice(0, 5).map(s => `<span class="badge bg-light text-dark me-1">${s}</span>`).join('')}
+                            ${inst.services.length > 5 ? `<span class="badge bg-secondary">+${inst.services.length - 5} más</span>` : ''}
+                        </div>
+                    ` : ''}
+                    
+                    ${source ? `<small class="text-muted mt-2 d-block"><i class="bi bi-database"></i> Fuente: ${source}</small>` : ''}
+                </div>
+            `;
+        }
+        
+        function getTypeClass(type) {
+            if (!type) return 'type-default';
+            const t = type.toUpperCase();
+            if (t.includes('IPS')) return 'type-ips';
+            if (t.includes('EPS')) return 'type-eps';
+            if (t.includes('CLINICA')) return 'type-clinica';
+            if (t.includes('ODONTO') || t.includes('DENTAL')) return 'type-odontologia';
+            return 'type-default';
+        }
+        
+        function formatType(type) {
+            if (!type) return 'Institución';
+            return type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('active', show);
+            document.getElementById('search-btn').disabled = show;
+        }
+        
+        function hideResults() {
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('no-results').style.display = 'none';
+        }
+        
+        function showToast(title, message) {
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = message;
+            const toast = new bootstrap.Toast(document.getElementById('notification-toast'));
+            toast.show();
+        }
+    </script>
+</body>
+</html>
