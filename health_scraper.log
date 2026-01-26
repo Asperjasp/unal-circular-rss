@@ -1719,3 +1719,711 @@ WHERE search_queries.id = ?
 2026-01-22 18:12:17,444 - sqlalchemy.engine.Engine - INFO - ROLLBACK
 2026-01-22 18:12:17,446 - main - INFO - Completed POST http://localhost:8000/api/v1/search/prompt?query=Odontologia+Soacha&limit=10 - 200 - 0.20s
 2026-01-22 18:20:11,042 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:02:16,713 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:02:16,873 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:02:40,550 - main - INFO - GET http://localhost:8000/
+2026-01-23 10:02:40,591 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.04s
+2026-01-23 10:02:41,577 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 10:02:41,709 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:02:41,797 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:02:41,798 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 10:02:41,799 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:02:41,820 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 10:02:41,821 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:02:41,822 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 10:02:41,823 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:02:41,824 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 10:02:41,825 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:02:41,826 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 10:02:41,827 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:02:41,828 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:02:41,840 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 10:02:41,844 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:02:41,921 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 10:02:41,923 - sqlalchemy.engine.Engine - INFO - [generated in 0.00169s] ()
+2026-01-23 10:02:41,941 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 10:02:41,942 - sqlalchemy.engine.Engine - INFO - [generated in 0.00102s] ()
+2026-01-23 10:02:41,955 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 10:02:41,957 - sqlalchemy.engine.Engine - INFO - [generated in 0.00219s] ()
+2026-01-23 10:02:41,962 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 10:02:41,963 - sqlalchemy.engine.Engine - INFO - [generated in 0.00124s] ()
+2026-01-23 10:02:41,971 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:02:41,972 - sqlalchemy.engine.Engine - INFO - [generated in 0.00154s] ('IPS',)
+2026-01-23 10:02:41,985 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:02:41,986 - sqlalchemy.engine.Engine - INFO - [cached since 0.01501s ago] ('EPS',)
+2026-01-23 10:02:41,991 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:02:41,992 - sqlalchemy.engine.Engine - INFO - [generated in 0.00094s] (10, 0)
+2026-01-23 10:02:42,009 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:02:42,010 - sqlalchemy.engine.Engine - INFO - [generated in 0.00088s] (10, 0)
+2026-01-23 10:02:42,022 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:02:42,024 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.45s
+2026-01-23 10:02:42,783 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:02:43,174 - main - INFO - GET http://localhost:8000/favicon.ico
+2026-01-23 10:02:43,176 - main - INFO - Completed GET http://localhost:8000/favicon.ico - 404 - 0.00s
+2026-01-23 10:02:43,921 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:30,492 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:04:30,823 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:31,785 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 10:04:31,861 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:31,966 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:04:31,967 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 10:04:31,967 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:04:31,986 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 10:04:31,987 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:04:31,988 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 10:04:31,988 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:04:31,989 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 10:04:31,990 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:04:31,991 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 10:04:31,991 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:04:32,008 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:04:32,009 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 10:04:32,036 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:04:32,201 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 10:04:32,202 - sqlalchemy.engine.Engine - INFO - [generated in 0.00126s] ()
+2026-01-23 10:04:32,216 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 10:04:32,217 - sqlalchemy.engine.Engine - INFO - [generated in 0.00097s] ()
+2026-01-23 10:04:32,221 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 10:04:32,222 - sqlalchemy.engine.Engine - INFO - [generated in 0.00105s] ()
+2026-01-23 10:04:32,237 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 10:04:32,241 - sqlalchemy.engine.Engine - INFO - [generated in 0.00411s] ()
+2026-01-23 10:04:32,256 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:04:32,257 - sqlalchemy.engine.Engine - INFO - [generated in 0.00133s] ('IPS',)
+2026-01-23 10:04:32,271 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:04:32,272 - sqlalchemy.engine.Engine - INFO - [cached since 0.01555s ago] ('EPS',)
+2026-01-23 10:04:32,280 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:04:32,288 - sqlalchemy.engine.Engine - INFO - [generated in 0.00839s] (10, 0)
+2026-01-23 10:04:32,308 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:04:32,309 - sqlalchemy.engine.Engine - INFO - [generated in 0.00072s] (10, 0)
+2026-01-23 10:04:32,323 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:04:32,326 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.54s
+2026-01-23 10:04:33,212 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:34,333 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:35,249 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:36,174 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:37,138 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:38,125 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:38,983 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:40,040 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:04:41,002 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:05:07,709 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:05:07,723 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia Especializada en ortodoncia cerca de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=None, near=Soacha
+2026-01-23 10:05:07,726 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 200 - 0.02s
+2026-01-23 10:05:07,746 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:05:07,749 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 405 - 0.00s
+2026-01-23 10:05:07,847 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:11:23,063 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:11:23,645 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:11:26,760 - watchfiles.main - INFO - 3 changes detected
+2026-01-23 10:11:27,369 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:11:27,935 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:12:59,444 - main - INFO - GET http://localhost:8000/.well-known/appspecific/com.chrome.devtools.json
+2026-01-23 10:12:59,502 - main - INFO - Completed GET http://localhost:8000/.well-known/appspecific/com.chrome.devtools.json - 404 - 0.06s
+2026-01-23 10:12:59,676 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:13:05,690 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:13:05,741 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia Especializada en ortodoncia cerca de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=None, near=Soacha
+2026-01-23 10:13:05,746 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 200 - 0.06s
+2026-01-23 10:13:05,776 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:13:05,783 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 405 - 0.01s
+2026-01-23 10:13:06,435 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:13:06,997 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:30,108 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:30,905 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:15:31,671 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:32,026 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:32,480 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:34,397 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 10:15:35,025 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:35,640 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:15:40,058 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:15:40,700 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:22,944 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:23,298 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:23,504 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:16:23,929 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:25,946 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:26,832 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:27,494 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:28,318 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:29,642 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:29,994 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:34,834 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:16:35,132 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:35,883 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:59,350 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:16:59,498 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:17:00,168 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:17:00,879 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:17:01,584 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 10:17:02,191 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:17:02,746 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:17:03,575 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:17:03,909 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:17:17,159 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:17:17,769 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:18:00,312 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:18:00,770 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:29:15,081 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:29:15,721 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:30:21,418 - watchfiles.main - INFO - 4 changes detected
+2026-01-23 10:30:21,992 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:30:22,762 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:30:26,012 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 10:30:26,676 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:30:30,643 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:30:30,847 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:30:38,070 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:30:38,075 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia Especializada en ortodoncia cerca de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=None, near=Soacha
+2026-01-23 10:30:38,076 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 200 - 0.01s
+2026-01-23 10:30:38,129 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:30:38,131 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 405 - 0.00s
+2026-01-23 10:30:38,468 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:31:52,915 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:31:53,080 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:31:54,002 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:31:55,224 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:31:56,290 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:31:57,060 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:31:57,886 - watchfiles.main - INFO - 3 changes detected
+2026-01-23 10:32:04,092 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:32:04,965 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:32:38,243 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:32:38,252 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia Especializada en ortodoncia cerca de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=None, near=Soacha
+2026-01-23 10:32:38,254 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 200 - 0.01s
+2026-01-23 10:32:38,299 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 10:32:38,386 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:32:38,595 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:32:38,597 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 10:32:38,598 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:32:38,602 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 10:32:38,603 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:32:38,607 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 10:32:38,612 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:32:38,613 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 10:32:38,614 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:32:38,616 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 10:32:38,616 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:32:38,618 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:32:38,619 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 10:32:38,627 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia Especializada en ortodoncia cerca de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=None, near=Soacha
+2026-01-23 10:32:38,996 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:32:39,036 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE ((lower(institutions.specialty_type) LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) AND ((institutions.treatments LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%')) AND (lower(institutions.city) LIKE '%' || ? || '%') AND (lower(institutions.department) LIKE '%' || ? || '%') AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:32:39,037 - sqlalchemy.engine.Engine - INFO - [generated in 0.00228s] ('odontologia', 'odontologia', '["odontologia"]', '["ortodoncia"]', '["ortodoncia"]', 'ortodoncia', 'soacha', 'cundinamarca', 'odontologia', 'odontologia', '["odontologia"]', '["odontologia"]', 20, 0)
+2026-01-23 10:32:39,079 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:32:39,082 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:32:39,089 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 10:32:39,091 - sqlalchemy.engine.Engine - INFO - [generated in 0.00218s] ('Odontologia Especializada en ortodoncia cerca de Soacha', 'odontologia', 'ortodoncia', None, 'Cundinamarca', 'Soacha', 0, 0, None, '2026-01-23 15:32:39.089353', 0.4532592296600342)
+2026-01-23 10:32:39,097 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:32:39,156 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:32:39,162 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 10:32:39,164 - sqlalchemy.engine.Engine - INFO - [generated in 0.00223s] (4,)
+2026-01-23 10:32:39,167 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:32:39,172 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20Especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 200 - 0.87s
+2026-01-23 10:32:39,297 - watchfiles.main - INFO - 3 changes detected
+2026-01-23 10:35:47,961 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:35:48,225 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:35:49,009 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:35:49,877 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:35:50,739 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 10:35:51,447 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:35:52,157 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:35:52,872 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:35:53,537 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:35:53,675 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:02,949 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:03,130 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:36:03,871 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:06,292 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 10:36:07,049 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:07,759 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:11,134 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:36:11,575 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:26,683 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:26,823 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 10:36:27,420 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:28,034 - watchfiles.main - INFO - 3 changes detected
+2026-01-23 10:36:28,688 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:31,214 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 10:36:31,227 - main - INFO - GET http://localhost:8000/
+2026-01-23 10:36:31,245 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.02s
+2026-01-23 10:36:31,590 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 10:36:31,603 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:32,098 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:32,100 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 10:36:32,101 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:32,128 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 10:36:32,129 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:32,131 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 10:36:32,132 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:32,133 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 10:36:32,142 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:32,144 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 10:36:32,145 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:32,147 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:36:32,149 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 10:36:32,163 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:32,317 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 10:36:32,318 - sqlalchemy.engine.Engine - INFO - [generated in 0.00143s] ()
+2026-01-23 10:36:32,336 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 10:36:32,337 - sqlalchemy.engine.Engine - INFO - [generated in 0.00102s] ()
+2026-01-23 10:36:32,341 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 10:36:32,342 - sqlalchemy.engine.Engine - INFO - [generated in 0.00090s] ()
+2026-01-23 10:36:32,346 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 10:36:32,360 - sqlalchemy.engine.Engine - INFO - [generated in 0.01390s] ()
+2026-01-23 10:36:32,366 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:36:32,366 - sqlalchemy.engine.Engine - INFO - [generated in 0.00099s] ('IPS',)
+2026-01-23 10:36:32,380 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:36:32,381 - sqlalchemy.engine.Engine - INFO - [cached since 0.0151s ago] ('EPS',)
+2026-01-23 10:36:32,398 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:36:32,399 - sqlalchemy.engine.Engine - INFO - [generated in 0.00121s] (10, 0)
+2026-01-23 10:36:32,417 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:36:32,428 - sqlalchemy.engine.Engine - INFO - [generated in 0.01130s] (10, 0)
+2026-01-23 10:36:32,430 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:36:32,434 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.84s
+2026-01-23 10:36:32,717 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:41,579 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-23 10:36:41,587 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.01s
+2026-01-23 10:36:41,605 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-23 10:36:41,619 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:41,622 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 10:36:41,623 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:41,629 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 10:36:41,630 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:41,631 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 10:36:41,632 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:41,633 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 10:36:41,634 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:41,635 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 10:36:41,636 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 10:36:41,647 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:36:41,648 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 10:36:41,651 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia especializada en ortodoncia de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=Soacha, near=None
+2026-01-23 10:36:41,659 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:41,715 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE ((lower(institutions.specialty_type) LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) AND ((institutions.treatments LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%')) AND (lower(institutions.city) LIKE '%' || ? || '%') AND (lower(institutions.department) LIKE '%' || ? || '%') AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:36:41,716 - sqlalchemy.engine.Engine - INFO - [generated in 0.00184s] ('odontologia', 'odontologia', '["odontologia"]', '["ortodoncia"]', '["ortodoncia"]', 'ortodoncia', 'soacha', 'cundinamarca', 'odontologia', 'odontologia', '["odontologia"]', '["odontologia"]', 20, 0)
+2026-01-23 10:36:41,748 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:36:41,751 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:41,757 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 10:36:41,758 - sqlalchemy.engine.Engine - INFO - [generated in 0.00140s] ('Odontologia especializada en ortodoncia de Soacha', 'odontologia', 'ortodoncia', 'Soacha', 'Cundinamarca', None, 0, 0, None, '2026-01-23 15:36:41.757621', 0.10036253929138184)
+2026-01-23 10:36:41,785 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:36:41,845 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:41,914 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:41,929 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 10:36:41,930 - sqlalchemy.engine.Engine - INFO - [generated in 0.00118s] (5,)
+2026-01-23 10:36:41,933 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:36:41,935 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.33s
+2026-01-23 10:36:42,663 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 10:36:43,321 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:44,178 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:44,836 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:36:58,523 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Instituciones%20prestadoras%20de%20Salud%20en%20Teusaquillo
+2026-01-23 10:36:58,528 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Instituciones%20prestadoras%20de%20Salud%20en%20Teusaquillo - 200 - 0.01s
+2026-01-23 10:36:58,543 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Instituciones%20prestadoras%20de%20Salud%20en%20Teusaquillo
+2026-01-23 10:36:58,546 - health_scraper.services.search_service - INFO - Parsed query 'Instituciones prestadoras de Salud en Teusaquillo' -> specialty=None, treatment=None, city=Teusaquillo, near=None
+2026-01-23 10:36:58,550 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:58,563 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE (lower(institutions.city) LIKE '%' || ? || '%') AND (lower(institutions.department) LIKE '%' || ? || '%') AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:36:58,564 - sqlalchemy.engine.Engine - INFO - [generated in 0.00158s] ('teusaquillo', 'bogotá d.c.', 'instituciones', 'instituciones', '["instituciones"]', '["instituciones"]', 20, 0)
+2026-01-23 10:36:58,568 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:36:58,576 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:58,578 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 10:36:58,579 - sqlalchemy.engine.Engine - INFO - [cached since 18.73s ago] ('Instituciones prestadoras de Salud en Teusaquillo', None, None, 'Teusaquillo', 'Bogotá D.C.', None, 0, 0, None, '2026-01-23 15:36:58.578108', 0.028430461883544922)
+2026-01-23 10:36:58,582 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:36:58,631 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:36:58,633 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 10:36:58,634 - sqlalchemy.engine.Engine - INFO - [cached since 18.61s ago] (6,)
+2026-01-23 10:36:58,636 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:36:58,646 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Instituciones%20prestadoras%20de%20Salud%20en%20Teusaquillo - 200 - 0.10s
+2026-01-23 10:36:58,769 - watchfiles.main - INFO - 3 changes detected
+2026-01-23 10:39:31,968 - main - INFO - GET http://localhost:8000/
+2026-01-23 10:39:32,002 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.03s
+2026-01-23 10:39:32,298 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 10:39:32,383 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:39:32,388 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 10:39:32,393 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] ()
+2026-01-23 10:39:32,401 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 10:39:32,402 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] ()
+2026-01-23 10:39:32,405 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 10:39:32,406 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] ()
+2026-01-23 10:39:32,408 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 10:39:32,409 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] ()
+2026-01-23 10:39:32,423 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:39:32,424 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] ('IPS',)
+2026-01-23 10:39:32,437 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:39:32,438 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] ('EPS',)
+2026-01-23 10:39:32,444 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:39:32,445 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] (10, 0)
+2026-01-23 10:39:32,461 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:39:32,462 - sqlalchemy.engine.Engine - INFO - [cached since 191.5s ago] (10, 0)
+2026-01-23 10:39:32,473 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:39:32,478 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.18s
+2026-01-23 10:39:32,801 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:38,066 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-23 10:39:38,082 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.02s
+2026-01-23 10:39:38,111 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-23 10:39:38,156 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia especializada en ortodoncia de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=Soacha, near=None
+2026-01-23 10:39:38,182 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:39:38,205 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE ((lower(institutions.specialty_type) LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) AND ((institutions.treatments LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%')) AND (lower(institutions.city) LIKE '%' || ? || '%') AND (lower(institutions.department) LIKE '%' || ? || '%') AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:39:38,206 - sqlalchemy.engine.Engine - INFO - [cached since 187.9s ago] ('odontologia', 'odontologia', '["odontologia"]', '["ortodoncia"]', '["ortodoncia"]', 'ortodoncia', 'soacha', 'cundinamarca', 'odontologia', 'odontologia', '["odontologia"]', '["odontologia"]', 20, 0)
+2026-01-23 10:39:38,223 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:39:38,240 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:39:38,242 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 10:39:38,243 - sqlalchemy.engine.Engine - INFO - [cached since 187.9s ago] ('Odontologia especializada en ortodoncia de Soacha', 'odontologia', 'ortodoncia', 'Soacha', 'Cundinamarca', None, 0, 0, None, '2026-01-23 15:39:38.242522', 0.07312798500061035)
+2026-01-23 10:39:38,266 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:39:38,454 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:39:38,456 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 10:39:38,457 - sqlalchemy.engine.Engine - INFO - [cached since 188s ago] (7,)
+2026-01-23 10:39:38,463 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:39:38,465 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.35s
+2026-01-23 10:39:39,302 - watchfiles.main - INFO - 3 changes detected
+2026-01-23 10:39:40,623 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:41,745 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:42,609 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:43,733 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:45,000 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:46,225 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:47,442 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:48,359 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:49,397 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:50,235 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:39:50,950 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:42:09,057 - main - INFO - GET http://localhost:8000/
+2026-01-23 10:42:09,069 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.01s
+2026-01-23 10:42:09,461 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:42:09,749 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 10:42:09,760 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:42:09,763 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 10:42:09,764 - sqlalchemy.engine.Engine - INFO - [cached since 357.4s ago] ()
+2026-01-23 10:42:09,767 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 10:42:09,768 - sqlalchemy.engine.Engine - INFO - [cached since 357.4s ago] ()
+2026-01-23 10:42:09,779 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 10:42:09,780 - sqlalchemy.engine.Engine - INFO - [cached since 357.4s ago] ()
+2026-01-23 10:42:09,782 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 10:42:09,783 - sqlalchemy.engine.Engine - INFO - [cached since 357.4s ago] ()
+2026-01-23 10:42:09,787 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:42:09,791 - sqlalchemy.engine.Engine - INFO - [cached since 357.4s ago] ('IPS',)
+2026-01-23 10:42:09,796 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 10:42:09,796 - sqlalchemy.engine.Engine - INFO - [cached since 357.4s ago] ('EPS',)
+2026-01-23 10:42:09,799 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:42:09,799 - sqlalchemy.engine.Engine - INFO - [cached since 357.3s ago] (10, 0)
+2026-01-23 10:42:09,806 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:42:09,806 - sqlalchemy.engine.Engine - INFO - [cached since 357.3s ago] (10, 0)
+2026-01-23 10:42:09,809 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:42:09,811 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.06s
+2026-01-23 10:42:12,085 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-23 10:42:12,087 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.00s
+2026-01-23 10:42:12,108 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-23 10:42:12,112 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia especializada en ortodoncia de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=Soacha, near=None
+2026-01-23 10:42:12,119 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:42:12,122 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE ((lower(institutions.specialty_type) LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) AND ((institutions.treatments LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%')) AND (lower(institutions.city) LIKE '%' || ? || '%') AND (lower(institutions.department) LIKE '%' || ? || '%') AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 10:42:12,123 - sqlalchemy.engine.Engine - INFO - [cached since 352.3s ago] ('odontologia', 'odontologia', '["odontologia"]', '["ortodoncia"]', '["ortodoncia"]', 'ortodoncia', 'soacha', 'cundinamarca', 'odontologia', 'odontologia', '["odontologia"]', '["odontologia"]', 20, 0)
+2026-01-23 10:42:12,131 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:42:12,141 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:42:12,150 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 10:42:12,151 - sqlalchemy.engine.Engine - INFO - [cached since 352.3s ago] ('Odontologia especializada en ortodoncia de Soacha', 'odontologia', 'ortodoncia', 'Soacha', 'Cundinamarca', None, 0, 0, None, '2026-01-23 15:42:12.150635', 0.022681236267089844)
+2026-01-23 10:42:12,154 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 10:42:12,187 - watchfiles.main - INFO - 1 change detected
+2026-01-23 10:42:12,203 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 10:42:12,204 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 10:42:12,204 - sqlalchemy.engine.Engine - INFO - [cached since 352.1s ago] (8,)
+2026-01-23 10:42:12,206 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 10:42:12,207 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.10s
+2026-01-23 10:42:12,797 - watchfiles.main - INFO - 2 changes detected
+2026-01-23 15:45:47,476 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 15:45:55,226 - main - INFO - GET http://localhost:8000/
+2026-01-23 15:45:55,336 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.11s
+2026-01-23 15:45:56,568 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 15:45:57,175 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 15:45:57,177 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 15:45:57,178 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 15:45:57,215 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 15:45:57,216 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 15:45:57,218 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 15:45:57,219 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 15:45:57,224 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 15:45:57,226 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 15:45:57,228 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 15:45:57,229 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 15:45:57,231 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 15:45:57,232 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 15:45:57,239 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 15:45:57,342 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 15:45:57,343 - sqlalchemy.engine.Engine - INFO - [generated in 0.00178s] ()
+2026-01-23 15:45:57,353 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 15:45:57,357 - sqlalchemy.engine.Engine - INFO - [generated in 0.00433s] ()
+2026-01-23 15:45:57,362 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 15:45:57,363 - sqlalchemy.engine.Engine - INFO - [generated in 0.00148s] ()
+2026-01-23 15:45:57,378 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 15:45:57,380 - sqlalchemy.engine.Engine - INFO - [generated in 0.00921s] ()
+2026-01-23 15:45:57,409 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 15:45:57,410 - sqlalchemy.engine.Engine - INFO - [generated in 0.00107s] ('IPS',)
+2026-01-23 15:45:57,446 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 15:45:57,447 - sqlalchemy.engine.Engine - INFO - [cached since 0.03805s ago] ('EPS',)
+2026-01-23 15:45:57,454 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 15:45:57,455 - sqlalchemy.engine.Engine - INFO - [generated in 0.00116s] (10, 0)
+2026-01-23 15:45:57,472 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 15:45:57,484 - sqlalchemy.engine.Engine - INFO - [generated in 0.01205s] (10, 0)
+2026-01-23 15:45:57,486 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 15:45:57,573 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 1.00s
+2026-01-23 16:06:51,293 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 16:06:51,299 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 16:07:45,984 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20cerca%20de%20Soacha
+2026-01-23 16:07:46,590 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:07:46,666 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 16:07:46,673 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:07:46,848 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 16:07:46,849 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:07:46,850 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 16:07:46,851 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:07:46,853 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 16:07:46,854 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:07:46,862 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 16:07:46,867 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:07:46,895 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 16:07:46,899 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 16:07:46,983 - health_scraper.services.search_service - INFO - Parsed query 'Odontologia especializada en ortodoncia cerca de Soacha' -> specialty=odontologia, treatment=ortodoncia, city=None, near=Soacha
+2026-01-23 16:07:48,024 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:07:48,199 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE ((lower(institutions.specialty_type) LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) AND ((institutions.treatments LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%')) AND (lower(institutions.city) LIKE '%' || ? || '%') AND (lower(institutions.department) LIKE '%' || ? || '%') AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:07:48,200 - sqlalchemy.engine.Engine - INFO - [generated in 0.01342s] ('odontologia', 'odontologia', '["odontologia"]', '["ortodoncia"]', '["ortodoncia"]', 'ortodoncia', 'soacha', 'cundinamarca', 'odontologia', 'odontologia', '["odontologia"]', '["odontologia"]', 20, 0)
+2026-01-23 16:07:48,317 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:07:48,366 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:07:48,437 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 16:07:48,438 - sqlalchemy.engine.Engine - INFO - [generated in 0.02448s] ('Odontologia especializada en ortodoncia cerca de Soacha', 'odontologia', 'ortodoncia', None, 'Cundinamarca', 'Soacha', 0, 0, None, '2026-01-23 21:07:48.424655', 1.38558030128479)
+2026-01-23 16:07:48,457 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 16:07:48,532 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:07:48,542 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 16:07:48,543 - sqlalchemy.engine.Engine - INFO - [generated in 0.00191s] (9,)
+2026-01-23 16:07:48,549 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:07:48,567 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20cerca%20de%20Soacha - 200 - 2.59s
+2026-01-23 16:08:14,576 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=odontologia
+2026-01-23 16:08:14,579 - health_scraper.services.search_service - INFO - Parsed query 'odontologia' -> specialty=odontologia, treatment=None, city=None, near=None
+2026-01-23 16:08:14,586 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:08:14,593 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE ((lower(institutions.specialty_type) LIKE '%' || ? || '%') OR (lower(institutions.name) LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) AND ((lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%')) ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:08:14,596 - sqlalchemy.engine.Engine - INFO - [generated in 0.00331s] ('odontologia', 'odontologia', '["odontologia"]', 'odontologia', 'odontologia', '["odontologia"]', '["odontologia"]', 20, 0)
+2026-01-23 16:08:14,605 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:08:14,607 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:08:14,608 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 16:08:14,609 - sqlalchemy.engine.Engine - INFO - [cached since 28.52s ago] ('odontologia', 'odontologia', None, None, None, None, 0, 0, None, '2026-01-23 21:08:14.608478', 0.026455402374267578)
+2026-01-23 16:08:14,614 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 16:08:14,657 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:08:14,658 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 16:08:14,659 - sqlalchemy.engine.Engine - INFO - [cached since 28.45s ago] (10,)
+2026-01-23 16:08:14,660 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:08:14,662 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=odontologia - 200 - 0.09s
+2026-01-23 16:18:28,751 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=force_error_test
+2026-01-23 16:18:28,757 - health_scraper.services.search_service - INFO - Parsed query 'force_error_test' -> specialty=None, treatment=None, city=None, near=None
+2026-01-23 16:18:28,763 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:18:28,774 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE (lower(institutions.name) LIKE '%' || ? || '%') OR (lower(institutions.address) LIKE '%' || ? || '%') OR (institutions.services LIKE '%' || ? || '%') OR (institutions.specialties LIKE '%' || ? || '%') ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:18:28,775 - sqlalchemy.engine.Engine - INFO - [generated in 0.00172s] ('force_error_test', 'force_error_test', '["force_error_test"]', '["force_error_test"]', 20, 0)
+2026-01-23 16:18:28,781 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:18:28,784 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:18:28,787 - sqlalchemy.engine.Engine - INFO - INSERT INTO search_queries (original_query, specialty, treatment, location_city, location_department, location_near, results_count, new_scraped_count, user_id, queried_at, execution_time_seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-23 16:18:28,790 - sqlalchemy.engine.Engine - INFO - [cached since 689.2s ago] ('force_error_test', None, None, None, None, None, 0, 0, None, '2026-01-23 21:18:28.787195', 0.026031494140625)
+2026-01-23 16:18:28,794 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 16:18:28,825 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:18:28,827 - sqlalchemy.engine.Engine - INFO - SELECT search_queries.id, search_queries.original_query, search_queries.specialty, search_queries.treatment, search_queries.location_city, search_queries.location_department, search_queries.location_near, search_queries.results_count, search_queries.new_scraped_count, search_queries.user_id, search_queries.queried_at, search_queries.execution_time_seconds 
+FROM search_queries 
+WHERE search_queries.id = ?
+2026-01-23 16:18:28,828 - sqlalchemy.engine.Engine - INFO - [cached since 689.1s ago] (11,)
+2026-01-23 16:18:28,829 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:18:28,833 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=force_error_test - 200 - 0.08s
+2026-01-23 16:18:31,477 - main - INFO - GET http://localhost:8000/
+2026-01-23 16:18:31,527 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.05s
+2026-01-23 16:18:32,018 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 16:18:32,026 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:18:32,028 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 16:18:32,029 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] ()
+2026-01-23 16:18:32,041 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 16:18:32,042 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] ()
+2026-01-23 16:18:32,044 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 16:18:32,045 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] ()
+2026-01-23 16:18:32,065 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 16:18:32,065 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] ()
+2026-01-23 16:18:32,071 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 16:18:32,071 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] ('IPS',)
+2026-01-23 16:18:32,086 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 16:18:32,086 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] ('EPS',)
+2026-01-23 16:18:32,111 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:18:32,112 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] (10, 0)
+2026-01-23 16:18:32,140 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:18:32,141 - sqlalchemy.engine.Engine - INFO - [cached since 1273s ago] (10, 0)
+2026-01-23 16:18:32,144 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:18:32,147 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.13s
+2026-01-23 16:19:37,750 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-23 16:19:48,146 - main - INFO - Starting Health Institutions Scraper API
+2026-01-23 16:20:10,494 - main - INFO - GET http://localhost:8000/
+2026-01-23 16:20:10,517 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.02s
+2026-01-23 16:20:11,156 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-23 16:20:11,294 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:20:11,296 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-23 16:20:11,297 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:20:11,303 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-23 16:20:11,304 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:20:11,312 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-23 16:20:11,313 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:20:11,314 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-23 16:20:11,315 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:20:11,317 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-23 16:20:11,317 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-23 16:20:11,328 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-23 16:20:11,330 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-23 16:20:11,336 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-23 16:20:11,422 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-23 16:20:11,423 - sqlalchemy.engine.Engine - INFO - [generated in 0.00126s] ()
+2026-01-23 16:20:11,429 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-23 16:20:11,430 - sqlalchemy.engine.Engine - INFO - [generated in 0.00127s] ()
+2026-01-23 16:20:11,444 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-23 16:20:11,445 - sqlalchemy.engine.Engine - INFO - [generated in 0.01115s] ()
+2026-01-23 16:20:11,449 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-23 16:20:11,461 - sqlalchemy.engine.Engine - INFO - [generated in 0.00116s] ()
+2026-01-23 16:20:11,467 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 16:20:11,468 - sqlalchemy.engine.Engine - INFO - [generated in 0.00108s] ('IPS',)
+2026-01-23 16:20:11,516 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-23 16:20:11,517 - sqlalchemy.engine.Engine - INFO - [cached since 0.04974s ago] ('EPS',)
+2026-01-23 16:20:11,533 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:20:11,534 - sqlalchemy.engine.Engine - INFO - [generated in 0.00109s] (10, 0)
+2026-01-23 16:20:11,551 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-23 16:20:11,553 - sqlalchemy.engine.Engine - INFO - [generated in 0.00256s] (10, 0)
+2026-01-23 16:20:11,566 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-23 16:20:11,570 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.41s

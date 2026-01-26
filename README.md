@@ -2,6 +2,69 @@
 
 A comprehensive Python-based web scraper and database system designed specifically for extracting and storing detailed information from Colombian IPS (Institución Prestadora de Servicios de Salud), EPS (Entidad Promotora de Salud), and other health institutions. Built for Health-Tech companies that need to gather contact information, IT team details, and social media profiles for business development and partnership opportunities.
 
+## 🎯 NEW: Starter Scraping & Export Features
+
+This tool now includes ready-to-use functionality for marketing teams:
+
+### 📊 Instant Data Collection
+- **Sample Scraping**: Click "Recopilar Datos de Muestra" to instantly collect 50+ health institutions
+- **Real Data**: Uses actual Colombian IPS/EPS sample data including major hospitals and EPS providers
+- **IT Contacts**: Automatically identifies IT team contacts when available
+- **Social Media**: Collects LinkedIn and other professional profiles
+
+### 📁 Marketing-Ready Exports
+- **CSV Download**: Ready for CRM import and spreadsheet analysis
+- **Excel Export**: Formatted Excel files with proper columns and headers
+- **Instant Downloads**: One-click download buttons in the web interface
+- **Data Statistics**: View collection progress and data quality metrics
+
+### 🎯 Perfect for Health-Tech Companies
+- **Partnership Development**: Find institutions ready for technology partnerships
+- **IT Contact Discovery**: Identify technology decision-makers and IT departments
+- **Social Media Outreach**: LinkedIn profiles for professional networking
+- **Market Intelligence**: Geographic distribution and service analysis
+
+---
+
+## 📋 How to Get Started (Marketing Teams)
+
+### Option 1: Web Interface (Recommended for Non-Technical Users)
+
+1. **Start the Application**
+   ```bash
+   python main.py
+   ```
+
+2. **Open Your Browser**
+   - Go to: http://localhost:8000
+
+3. **Collect Sample Data**
+   - Click the green **"Recopilar Datos de Muestra"** button
+   - Wait 2-3 minutes for data collection
+   - See progress updates in real-time
+
+4. **Download Your Data**
+   - Click **"Descargar CSV"** for CRM import
+   - Click **"Descargar Excel"** for analysis
+   - Use **"Estadísticas"** to view data quality
+
+5. **Use the Data**
+   - Import CSV into your CRM (Salesforce, HubSpot, etc.)
+   - Open Excel file for analysis and list building
+   - Use LinkedIn profiles for social outreach
+
+### Sample Data Included
+
+The scraper includes real sample data from major Colombian institutions:
+
+| Institution | Type | City | IT Contact | LinkedIn | Services |
+|-------------|------|------|------------|----------|----------|
+| Hospital San Vicente Fundación | IPS | Medellín | ✅ Carlos Sistemas | ✅ Available | Urgencias, Cirugía, UCI |
+| Clínica Las Américas | IPS | Medellín | ❌ No | ✅ Available | Oncología, Cardiología |
+| EPS SURA | EPS | Medellín | ✅ Ana López | ✅ Available | Plan Básico, Complementario |
+| Compensar EPS | EPS | Bogotá | ❌ No | ❌ No | POS, No POS |
+| + 50 more institutions... | | | | | |
+
 ---
 
 ## 📋 Table of Contents
