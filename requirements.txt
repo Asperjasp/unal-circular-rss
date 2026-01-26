@@ -32,4 +32,14 @@ openpyxl>=3.1.2
 
 # Async Support
 aiofiles>=23.2.1
-httpx>=0.25.2
+httpx>=0.28.0
+
+# AI / Vision
+google-genai>=1.0.0
+Pillow>=10.0.0
+
+# File Upload
+python-multipart>=0.0.6
+
+# Web Framework (updated for anyio 4.x support)
+fastapi>=0.110.0
