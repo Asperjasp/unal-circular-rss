@@ -2427,3 +2427,144 @@ WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_ty
 2026-01-23 16:20:11,553 - sqlalchemy.engine.Engine - INFO - [generated in 0.00256s] (10, 0)
 2026-01-23 16:20:11,566 - sqlalchemy.engine.Engine - INFO - ROLLBACK
 2026-01-23 16:20:11,570 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.41s
+2026-01-26 10:00:38,843 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 10:01:45,601 - main - INFO - GET http://localhost:8000/api/v1/vision/status
+2026-01-26 10:01:46,330 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 10:01:46,340 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 10:01:46,341 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:46,350 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 10:01:46,351 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:46,352 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 10:01:46,353 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:46,354 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 10:01:46,355 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:46,359 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 10:01:46,360 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:46,362 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 10:01:46,363 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 10:01:46,364 - health_scraper.services.vision_service - INFO - VisionExtractorService initialized with gemini-2.0-flash
+2026-01-26 10:01:46,367 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/status - 200 - 0.77s
+2026-01-26 10:01:51,512 - main - INFO - GET http://localhost:8000/
+2026-01-26 10:01:51,539 - main - INFO - Completed GET http://localhost:8000/ - 200 - 0.03s
+2026-01-26 10:01:53,200 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 10:01:53,208 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 10:01:53,209 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 10:01:53,210 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:53,218 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 10:01:53,218 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:53,223 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 10:01:53,225 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:53,226 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 10:01:53,228 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:53,229 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 10:01:53,229 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:01:53,231 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 10:01:53,239 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 10:01:53,273 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 10:01:53,401 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 10:01:53,403 - sqlalchemy.engine.Engine - INFO - [generated in 0.00237s] ()
+2026-01-26 10:01:53,460 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 10:01:53,461 - sqlalchemy.engine.Engine - INFO - [generated in 0.00118s] ()
+2026-01-26 10:01:53,497 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 10:01:53,498 - sqlalchemy.engine.Engine - INFO - [generated in 0.00102s] ()
+2026-01-26 10:01:53,503 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 10:01:53,512 - sqlalchemy.engine.Engine - INFO - [generated in 0.00954s] ()
+2026-01-26 10:01:53,546 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 10:01:53,547 - sqlalchemy.engine.Engine - INFO - [generated in 0.00112s] ('IPS',)
+2026-01-26 10:01:53,553 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 10:01:53,562 - sqlalchemy.engine.Engine - INFO - [cached since 0.01568s ago] ('EPS',)
+2026-01-26 10:01:53,583 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 10:01:53,583 - sqlalchemy.engine.Engine - INFO - [generated in 0.00108s] (10, 0)
+2026-01-26 10:01:53,620 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 10:01:53,622 - sqlalchemy.engine.Engine - INFO - [generated in 0.00168s] (10, 0)
+2026-01-26 10:01:53,625 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 10:01:53,638 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.44s
+2026-01-26 10:01:54,121 - main - INFO - GET http://localhost:8000/favicon.ico
+2026-01-26 10:01:54,129 - main - INFO - Completed GET http://localhost:8000/favicon.ico - 404 - 0.01s
+2026-01-26 10:01:56,362 - main - INFO - GET http://localhost:8000/api/v1/scrape/sample?limit=50
+2026-01-26 10:01:56,406 - health_scraper.api.endpoints - ERROR - Error scraping sample institutions: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 10:01:56,407 - main - INFO - Completed GET http://localhost:8000/api/v1/scrape/sample?limit=50 - 500 - 0.04s
+2026-01-26 10:02:04,526 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-26 10:02:13,913 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 10:36:53,173 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 10:36:54,453 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 10:36:54,512 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 10:36:54,518 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:36:54,598 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 10:36:54,599 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:36:54,600 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 10:36:54,601 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:36:54,604 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 10:36:54,605 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:36:54,606 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 10:36:54,607 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 10:36:54,643 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 10:36:54,648 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 10:36:54,868 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 10:36:55,432 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 10:36:55,434 - sqlalchemy.engine.Engine - INFO - [generated in 0.00693s] ()
+2026-01-26 10:36:55,483 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 10:36:55,484 - sqlalchemy.engine.Engine - INFO - [generated in 0.00119s] ()
+2026-01-26 10:36:55,495 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 10:36:55,496 - sqlalchemy.engine.Engine - INFO - [generated in 0.00127s] ()
+2026-01-26 10:36:55,510 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 10:36:55,511 - sqlalchemy.engine.Engine - INFO - [generated in 0.00117s] ()
+2026-01-26 10:36:55,538 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 10:36:55,539 - sqlalchemy.engine.Engine - INFO - [generated in 0.00164s] ('IPS',)
+2026-01-26 10:36:55,553 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 10:36:55,554 - sqlalchemy.engine.Engine - INFO - [cached since 0.01645s ago] ('EPS',)
+2026-01-26 10:36:55,589 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 10:36:55,590 - sqlalchemy.engine.Engine - INFO - [generated in 0.00150s] (10, 0)
+2026-01-26 10:36:55,616 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 10:36:55,617 - sqlalchemy.engine.Engine - INFO - [generated in 0.00131s] (10, 0)
+2026-01-26 10:36:55,632 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 10:36:55,666 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 2.50s
+2026-01-26 10:36:56,294 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-26 10:36:56,348 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.05s
+2026-01-26 10:36:56,445 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-26 10:36:56,556 - health_scraper.api.endpoints - ERROR - Search error: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 10:36:56,558 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.11s
+2026-01-26 10:37:01,475 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-26 10:37:01,480 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.00s
+2026-01-26 10:37:02,452 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha
+2026-01-26 10:37:02,483 - health_scraper.api.endpoints - ERROR - Search error: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 10:37:02,490 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontologia%20especializada%20en%20ortodoncia%20de%20Soacha - 200 - 0.04s
+2026-01-26 10:37:08,397 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=EPS%20en%20Colombia
+2026-01-26 10:37:08,402 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=EPS%20en%20Colombia - 200 - 0.01s
+2026-01-26 10:37:08,434 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=EPS%20en%20Colombia
+2026-01-26 10:37:08,439 - health_scraper.api.endpoints - ERROR - Search error: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 10:37:08,441 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=EPS%20en%20Colombia - 200 - 0.01s
+2026-01-26 10:37:22,936 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-26 10:37:41,863 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 10:37:41,878 - main - INFO - GET http://localhost:8000/docs
+2026-01-26 10:37:41,885 - main - INFO - Completed GET http://localhost:8000/docs - 200 - 0.01s
+2026-01-26 10:37:49,610 - main - INFO - GET http://localhost:8000/openapi.json
+2026-01-26 10:37:49,863 - fastapi - WARNING - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2026-01-26 10:37:49,904 - main - INFO - Completed GET http://localhost:8000/openapi.json - 200 - 0.29s

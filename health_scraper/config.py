@@ -29,6 +29,10 @@ class Config:
         self.linkedin_enabled = os.getenv("LINKEDIN_ENABLED", "True").lower() == "true"
         self.twitter_enabled = os.getenv("TWITTER_ENABLED", "True").lower() == "true"
         
+        # AI / Vision configuration
+        self.google_ai_studio_key = os.getenv("GOOGLE_AI_STUDIO")
+        self.vision_model = os.getenv("VISION_MODEL", "gemini-1.5-flash")
+        
         # Setup logging
         self._setup_logging()
     

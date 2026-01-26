@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional, Dict, Any
 import time
 from pathlib import Path
-from fastapi import APIRouter, HTTPException, BackgroundTasks, Query
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Query, UploadFile, File, Form
 from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
 
 from ..models.institution import (
@@ -19,6 +19,7 @@ from ..models.institution import (
 from ..scrapers.base_scraper import BaseHealthScraper
 from ..scrapers.social_media_scraper import SocialMediaScraper
 from ..database.service import DatabaseService
+from ..services.vision_service import VisionExtractorService, ExtractionResult
 
 logger = logging.getLogger(__name__)
 
@@ -1509,3 +1510,214 @@ async def seed_database():
     except Exception as e:
         logger.error(f"Seed database error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# =============================================================================
+# VISION EXTRACTION ENDPOINTS - Document/Image Processing
+# =============================================================================
+
+# Global vision service instance
+vision_service = None
+
+def get_vision_service():
+    """Get or create vision extractor service"""
+    global vision_service
+    if vision_service is None:
+        try:
+            vision_service = VisionExtractorService()
+        except ValueError as e:
+            logger.error(f"Failed to initialize vision service: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Vision service not configured. Set GOOGLE_AI_STUDIO in .env"
+            )
+    return vision_service
+
+
+@router.post("/vision/extract", tags=["Vision Extraction"])
+async def extract_from_image(
+    file: UploadFile = File(..., description="Image file (JPG, PNG, etc.) to extract data from"),
+    save_to_database: bool = Query(True, description="Whether to save extracted data to database")
+):
+    """
+    Extract health institution data from an uploaded image.
+    
+    This endpoint uses Google's Gemini Vision AI to:
+    1. Analyze the image and determine if it's health-related
+    2. Extract structured data (name, NIT, address, phone, etc.)
+    3. Check for duplicates in the database
+    4. Save new institutions automatically (if save_to_database=True)
+    
+    **Supported Images:**
+    - ISP/INVIMA certificates
+    - Clinic signs and storefronts
+    - Business cards from medical professionals
+    - Registration documents
+    - Letterheads and official documents
+    
+    **Returns:**
+    - `is_health_related`: Whether the document is health-sector related
+    - `extracted_data`: Structured data extracted from the image
+    - `is_duplicate`: Whether this institution already exists in database
+    - `existing_id`: Database ID if saved or found as duplicate
+    """
+    # Validate file type
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file type: {file.content_type}. Allowed: {', '.join(allowed_types)}"
+        )
+    
+    # Validate file size (max 20MB)
+    contents = await file.read()
+    if len(contents) > 20 * 1024 * 1024:
+        raise HTTPException(
+            status_code=400,
+            detail="File too large. Maximum size is 20MB."
+        )
+    
+    try:
+        service = get_vision_service()
+        result = await service.extract_from_bytes(
+            image_bytes=contents,
+            save_to_database=save_to_database,
+            source_filename=file.filename
+        )
+        
+        return {
+            "success": result.success,
+            "is_health_related": result.is_health_related,
+            "confidence": result.confidence,
+            "message": result.message,
+            "extracted_data": result.extracted_data,
+            "is_duplicate": result.is_duplicate,
+            "institution_id": result.existing_id,
+            "filename": file.filename
+        }
+        
+    except Exception as e:
+        logger.error(f"Vision extraction error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/vision/extract/batch", tags=["Vision Extraction"])
+async def extract_from_multiple_images(
+    files: List[UploadFile] = File(..., description="Multiple image files to process"),
+    save_to_database: bool = Query(True, description="Whether to save extracted data to database")
+):
+    """
+    Extract health institution data from multiple images in batch.
+    
+    Upload multiple images at once for efficient processing.
+    Each image is analyzed independently and results are returned together.
+    
+    **Returns:**
+    - Summary statistics (total, health-related, new, duplicates)
+    - Individual results for each image
+    """
+    if len(files) > 20:
+        raise HTTPException(
+            status_code=400,
+            detail="Maximum 20 images per batch. Please split into smaller batches."
+        )
+    
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp"]
+    
+    try:
+        service = get_vision_service()
+        results = []
+        
+        for file in files:
+            # Validate each file
+            if file.content_type not in allowed_types:
+                results.append({
+                    "filename": file.filename,
+                    "success": False,
+                    "message": f"Invalid file type: {file.content_type}"
+                })
+                continue
+            
+            contents = await file.read()
+            if len(contents) > 20 * 1024 * 1024:
+                results.append({
+                    "filename": file.filename,
+                    "success": False,
+                    "message": "File too large (max 20MB)"
+                })
+                continue
+            
+            # Process image
+            result = await service.extract_from_bytes(
+                image_bytes=contents,
+                save_to_database=save_to_database,
+                source_filename=file.filename
+            )
+            
+            results.append({
+                "filename": file.filename,
+                "success": result.success,
+                "is_health_related": result.is_health_related,
+                "confidence": result.confidence,
+                "message": result.message,
+                "extracted_data": result.extracted_data,
+                "is_duplicate": result.is_duplicate,
+                "institution_id": result.existing_id
+            })
+        
+        # Calculate summary
+        total = len(results)
+        successful = sum(1 for r in results if r.get("success"))
+        health_related = sum(1 for r in results if r.get("is_health_related"))
+        new_institutions = sum(1 for r in results if r.get("is_health_related") and not r.get("is_duplicate"))
+        duplicates = sum(1 for r in results if r.get("is_duplicate"))
+        
+        return {
+            "success": True,
+            "summary": {
+                "total_processed": total,
+                "successful": successful,
+                "health_related": health_related,
+                "new_institutions_saved": new_institutions,
+                "duplicates_found": duplicates
+            },
+            "results": results
+        }
+        
+    except Exception as e:
+        logger.error(f"Batch vision extraction error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/vision/status", tags=["Vision Extraction"])
+async def vision_service_status():
+    """
+    Check if the vision extraction service is configured and ready.
+    
+    Returns the status of the Gemini Vision integration.
+    """
+    import os
+    
+    api_key_set = bool(os.getenv("GOOGLE_AI_STUDIO"))
+    
+    if not api_key_set:
+        return {
+            "status": "not_configured",
+            "message": "GOOGLE_AI_STUDIO API key not set in .env file",
+            "ready": False
+        }
+    
+    try:
+        service = get_vision_service()
+        return {
+            "status": "ready",
+            "message": "Vision extraction service is configured and ready",
+            "ready": True,
+            "model": service.model_name
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+            "ready": False
+        }

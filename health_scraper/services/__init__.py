@@ -25,10 +25,19 @@ from .search_service import (
     search_health_institutions
 )
 
+from .vision_service import (
+    VisionExtractorService,
+    ExtractionResult,
+    DocumentType
+)
+
 __all__ = [
     "QueryParser",
     "ParsedQuery", 
     "SearchResult",
     "PromptSearchService",
-    "search_health_institutions"
+    "search_health_institutions",
+    "VisionExtractorService",
+    "ExtractionResult",
+    "DocumentType"
 ]
