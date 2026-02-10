@@ -1721,3 +1721,259 @@ async def vision_service_status():
             "message": str(e),
             "ready": False
         }
+
+
+# ================================================================================
+# CLIENTS FOLDER PROCESSING - Process images from the clients directory
+# ================================================================================
+
+# Global status for clients folder processing
+_clients_processing_status = {
+    "is_running": False,
+    "started_at": None,
+    "progress": 0,
+    "total": 0,
+    "processed": 0,
+    "health_related": 0,
+    "new_institutions": 0,
+    "duplicates": 0,
+    "errors": [],
+    "results": []
+}
+
+
+@router.get("/vision/clients/list", tags=["Vision Extraction"])
+async def list_client_images():
+    """
+    📂 List all images in the clients folder.
+    
+    Returns a list of all JPEG/PNG images found in the clients directory
+    that can be processed for health institution data extraction.
+    """
+    clients_folder = Path(__file__).parent.parent.parent / "clients"
+    
+    if not clients_folder.exists():
+        return {
+            "success": False,
+            "message": f"Clients folder not found: {clients_folder}",
+            "images": []
+        }
+    
+    # Find all image files
+    image_extensions = {'.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp'}
+    images = []
+    
+    for file in clients_folder.iterdir():
+        if file.is_file() and file.suffix.lower() in image_extensions:
+            images.append({
+                "filename": file.name,
+                "path": str(file),
+                "size_kb": round(file.stat().st_size / 1024, 2)
+            })
+    
+    return {
+        "success": True,
+        "folder": str(clients_folder),
+        "total_images": len(images),
+        "images": images
+    }
+
+
+@router.post("/vision/clients/process", tags=["Vision Extraction"])
+async def process_clients_folder(
+    background_tasks: BackgroundTasks,
+    save_to_database: bool = Query(True, description="Whether to save extracted data to database")
+):
+    """
+    🔍 Process all images in the clients folder using Gemini Vision AI.
+    
+    This endpoint:
+    1. Scans the /clients folder for JPEG/PNG images
+    2. Sends each image to Gemini for health institution data extraction
+    3. Saves new institutions to the database (with duplicate detection)
+    4. Returns progress updates via /vision/clients/status
+    
+    **Use Case:**
+    Upload photos of clinic signs, certificates, or documents to the clients folder,
+    then call this endpoint to automatically extract and save the institution data.
+    
+    **Supported Image Types:** JPEG, PNG, WebP, GIF, BMP
+    """
+    global _clients_processing_status
+    
+    if _clients_processing_status["is_running"]:
+        raise HTTPException(
+            status_code=409,
+            detail="Processing already in progress. Check /vision/clients/status for progress."
+        )
+    
+    clients_folder = Path(__file__).parent.parent.parent / "clients"
+    
+    if not clients_folder.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"Clients folder not found: {clients_folder}"
+        )
+    
+    # Find all image files
+    image_extensions = {'.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp'}
+    image_files = [
+        f for f in clients_folder.iterdir() 
+        if f.is_file() and f.suffix.lower() in image_extensions
+    ]
+    
+    if not image_files:
+        return {
+            "success": False,
+            "message": "No images found in clients folder",
+            "folder": str(clients_folder)
+        }
+    
+    # Start background processing
+    background_tasks.add_task(
+        run_clients_folder_processing,
+        image_files,
+        save_to_database
+    )
+    
+    return {
+        "success": True,
+        "message": f"Started processing {len(image_files)} images from clients folder",
+        "total_images": len(image_files),
+        "folder": str(clients_folder),
+        "status_endpoint": "/api/v1/vision/clients/status"
+    }
+
+
+async def run_clients_folder_processing(
+    image_files: List[Path],
+    save_to_database: bool
+):
+    """Background task to process all images from clients folder."""
+    global _clients_processing_status
+    
+    _clients_processing_status = {
+        "is_running": True,
+        "started_at": datetime.now().isoformat(),
+        "progress": 0,
+        "total": len(image_files),
+        "processed": 0,
+        "health_related": 0,
+        "new_institutions": 0,
+        "duplicates": 0,
+        "errors": [],
+        "results": []
+    }
+    
+    try:
+        service = get_vision_service()
+        
+        for i, image_path in enumerate(image_files):
+            _clients_processing_status["progress"] = i + 1
+            
+            try:
+                logger.info(f"Processing image {i+1}/{len(image_files)}: {image_path.name}")
+                
+                result = await service.extract_from_image(
+                    image_path=image_path,
+                    save_to_database=save_to_database
+                )
+                
+                _clients_processing_status["processed"] += 1
+                
+                result_data = {
+                    "filename": image_path.name,
+                    "success": result.success,
+                    "is_health_related": result.is_health_related,
+                    "confidence": result.confidence,
+                    "message": result.message,
+                    "is_duplicate": result.is_duplicate,
+                    "institution_id": result.existing_id
+                }
+                
+                if result.is_health_related:
+                    _clients_processing_status["health_related"] += 1
+                    result_data["extracted_data"] = result.extracted_data
+                    
+                    if result.is_duplicate:
+                        _clients_processing_status["duplicates"] += 1
+                    else:
+                        _clients_processing_status["new_institutions"] += 1
+                
+                _clients_processing_status["results"].append(result_data)
+                
+            except Exception as e:
+                error_msg = f"{image_path.name}: {str(e)}"
+                _clients_processing_status["errors"].append(error_msg)
+                _clients_processing_status["results"].append({
+                    "filename": image_path.name,
+                    "success": False,
+                    "message": str(e)
+                })
+                logger.error(f"Error processing {image_path.name}: {e}")
+            
+            # Small delay between requests to avoid rate limiting
+            await asyncio.sleep(0.5)
+        
+        _clients_processing_status["is_running"] = False
+        logger.info(
+            f"Clients folder processing complete: "
+            f"{_clients_processing_status['processed']} processed, "
+            f"{_clients_processing_status['new_institutions']} new institutions"
+        )
+        
+    except Exception as e:
+        _clients_processing_status["is_running"] = False
+        _clients_processing_status["errors"].append(f"Fatal error: {str(e)}")
+        logger.error(f"Clients folder processing failed: {e}")
+
+
+@router.get("/vision/clients/status", tags=["Vision Extraction"])
+async def get_clients_processing_status():
+    """
+    📊 Get the status of clients folder processing.
+    
+    Use this to monitor the progress of the /vision/clients/process job.
+    
+    **Status Fields:**
+    - is_running: Whether processing is currently in progress
+    - progress/total: Current progress (e.g., 5/27 images)
+    - health_related: Images that contained health institution data
+    - new_institutions: New institutions saved to database
+    - duplicates: Institutions that already existed
+    - results: Detailed results for each processed image
+    """
+    return {
+        "status": _clients_processing_status,
+        "progress_percent": round(
+            (_clients_processing_status["progress"] / max(_clients_processing_status["total"], 1)) * 100,
+            1
+        ) if _clients_processing_status["total"] > 0 else 0
+    }
+
+
+@router.get("/vision/clients/results", tags=["Vision Extraction"])
+async def get_clients_processing_results():
+    """
+    📋 Get the detailed results from the last clients folder processing run.
+    
+    Returns all extracted institution data from the last processing job.
+    """
+    if not _clients_processing_status["results"]:
+        return {
+            "success": False,
+            "message": "No processing results available. Run /vision/clients/process first."
+        }
+    
+    return {
+        "success": True,
+        "summary": {
+            "total_processed": _clients_processing_status["processed"],
+            "health_related": _clients_processing_status["health_related"],
+            "new_institutions": _clients_processing_status["new_institutions"],
+            "duplicates": _clients_processing_status["duplicates"],
+            "errors": len(_clients_processing_status["errors"])
+        },
+        "results": _clients_processing_status["results"],
+        "errors": _clients_processing_status["errors"]
+    }

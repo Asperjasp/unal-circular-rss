@@ -155,10 +155,58 @@
         .btn-action {
             border-radius: 10px;
             padding: 0.75rem 1.25rem;
-            font-weight: 500;
-            display: flex;
+            font-weight: 600;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-action:active {
+            transform: translateY(0);
+        }
+        
+        /* High contrast button styles */
+        .btn-csv {
+            background: #1a7f37 !important;
+            border-color: #1a7f37 !important;
+            color: white !important;
+        }
+        
+        .btn-csv:hover {
+            background: #116329 !important;
+            border-color: #116329 !important;
+        }
+        
+        .btn-excel {
+            background: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: white !important;
+        }
+        
+        .btn-excel:hover {
+            background: #0a58ca !important;
+            border-color: #0a58ca !important;
+        }
+        
+        .btn-vision {
+            background: #6f42c1 !important;
+            border-color: #6f42c1 !important;
+            color: white !important;
+        }
+        
+        .btn-vision:hover {
+            background: #59359a !important;
+            border-color: #59359a !important;
         }
         
         /* Filters */
@@ -468,17 +516,30 @@
                 <div class="col-lg-6">
                     <h6 class="mb-3"><i class="bi bi-download"></i> Exportar & Acciones</h6>
                     <div class="action-buttons">
-                        <button class="btn btn-success btn-action" onclick="downloadCSV()">
+                        <button type="button" class="btn btn-action btn-csv" id="btn-csv" onclick="downloadCSV()">
                             <i class="bi bi-filetype-csv"></i> Descargar CSV
                         </button>
-                        <button class="btn btn-success btn-action" onclick="downloadExcel()">
+                        <button type="button" class="btn btn-action btn-excel" id="btn-excel" onclick="downloadExcel()">
                             <i class="bi bi-file-earmark-excel"></i> Descargar Excel
                         </button>
-                        <button class="btn btn-warning btn-action" onclick="quickPopulate()">
-                            <i class="bi bi-cloud-download"></i> Poblar BD
+                        <button type="button" class="btn btn-action btn-vision" id="btn-vision" onclick="processClientImages()">
+                            <i class="bi bi-robot"></i> Procesar Imágenes (AI)
                         </button>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Vision AI Progress -->
+            <div class="vision-progress" id="vision-progress" style="display: none;">
+                <hr>
+                <h6><i class="bi bi-robot"></i> Procesando imágenes con Gemini AI...</h6>
+                <div class="progress mb-2">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" 
+                         id="vision-progress-bar" style="width: 0%"></div>
+                </div>
+                <small class="text-muted">
+                    <span id="vision-status-text">Iniciando análisis...</span>
+                </small>
             </div>
             
             <!-- Scraping Progress -->
@@ -522,9 +583,40 @@
         <div class="footer">
             <p>
                 <a href="/docs" target="_blank"><i class="bi bi-book"></i> API Documentation</a> | 
-                <a href="#" onclick="showStats()"><i class="bi bi-bar-chart"></i> Estadísticas</a>
+                <a href="#" onclick="showStats()"><i class="bi bi-bar-chart"></i> Estadísticas</a> |
+                <a href="#" onclick="showLoginModal()" id="auth-link"><i class="bi bi-key"></i> <span id="auth-status">Iniciar Sesión</span></a>
             </p>
             <small>Health Scraper Colombia - Buscador inteligente de instituciones de salud</small>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-shield-lock"></i> Autenticación Requerida</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-3">Ingresa la clave API para descargar archivos protegidos.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Clave API</label>
+                        <input type="password" class="form-control" id="api-key-input" 
+                               placeholder="Ingresa tu clave API...">
+                    </div>
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle"></i> 
+                        La clave API se guarda localmente y se usa para autenticar las descargas.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveApiKey()">
+                        <i class="bi bi-check-lg"></i> Guardar
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -789,12 +881,19 @@
         
         // Download CSV
         function downloadCSV() {
+            const apiKey = localStorage.getItem('api_key');
+            if (!apiKey) {
+                showLoginModal();
+                showToast('Autenticación', 'Ingresa tu clave API para descargar', 'warning');
+                return;
+            }
+            
             const type = document.getElementById('filter-type').value;
             const city = document.getElementById('filter-city').value;
             
-            let url = `${API_BASE}/export/csv?`;
-            if (type) url += `institution_type=${encodeURIComponent(type)}&`;
-            if (city) url += `city=${encodeURIComponent(city)}&`;
+            let url = `${API_BASE}/secure/export/csv?api_key=${encodeURIComponent(apiKey)}`;
+            if (type) url += `&institution_type=${encodeURIComponent(type)}`;
+            if (city) url += `&city=${encodeURIComponent(city)}`;
             
             window.location.href = url;
             showToast('Descarga', 'Descargando archivo CSV...', 'info');
@@ -802,12 +901,19 @@
         
         // Download Excel
         function downloadExcel() {
+            const apiKey = localStorage.getItem('api_key');
+            if (!apiKey) {
+                showLoginModal();
+                showToast('Autenticación', 'Ingresa tu clave API para descargar', 'warning');
+                return;
+            }
+            
             const type = document.getElementById('filter-type').value;
             const city = document.getElementById('filter-city').value;
             
-            let url = `${API_BASE}/export/excel?`;
-            if (type) url += `institution_type=${encodeURIComponent(type)}&`;
-            if (city) url += `city=${encodeURIComponent(city)}&`;
+            let url = `${API_BASE}/secure/export/excel?api_key=${encodeURIComponent(apiKey)}`;
+            if (type) url += `&institution_type=${encodeURIComponent(type)}`;
+            if (city) url += `&city=${encodeURIComponent(city)}`;
             
             window.location.href = url;
             showToast('Descarga', 'Descargando archivo Excel...', 'info');
@@ -853,18 +959,140 @@
             showToast('Iniciando', 'Iniciando población de base de datos...', 'info');
             
             try {
-                const response = await fetch(`${API_BASE}/scrape/quick-populate?count_per_type=10`, {
+                const response = await fetch(`${API_BASE}/scrape/seed-database`, {
                     method: 'POST'
                 });
                 
                 if (response.ok) {
-                    showToast('En progreso', 'Scraping iniciado. Puedes verificar el progreso.', 'success');
-                    startProgressMonitor();
+                    const data = await response.json();
+                    showToast('Completado', 
+                        `Base de datos poblada: ${data.details.new_institutions} instituciones agregadas`, 
+                        'success');
+                    loadStatistics();
                 } else {
-                    showToast('Error', 'Error al iniciar el scraping', 'danger');
+                    showToast('Error', 'Error al poblar la base de datos', 'danger');
                 }
             } catch (error) {
                 showToast('Error', 'Error de conexión', 'danger');
+            }
+        }
+        
+        // Process images from clients folder using Gemini Vision AI
+        let visionCheckInterval = null;
+        
+        async function processClientImages() {
+            // First check how many images are available
+            try {
+                const listResp = await fetch(`${API_BASE}/vision/clients/list`);
+                if (!listResp.ok) {
+                    showToast('Error', 'No se pudo acceder a la carpeta de clientes', 'danger');
+                    return;
+                }
+                
+                const listData = await listResp.json();
+                
+                if (listData.total_images === 0) {
+                    showToast('Aviso', 'No hay imágenes en la carpeta de clientes', 'warning');
+                    return;
+                }
+                
+                if (!confirm(`Se encontraron ${listData.total_images} imágenes en la carpeta de clientes.\n\n¿Deseas procesarlas con Gemini AI para extraer datos de instituciones de salud?`)) {
+                    return;
+                }
+                
+                showToast('Iniciando', `Procesando ${listData.total_images} imágenes con Gemini AI...`, 'info');
+                
+                // Start processing
+                const response = await fetch(`${API_BASE}/vision/clients/process`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showToast('En progreso', 'Análisis de imágenes iniciado. Esto puede tomar unos minutos.', 'success');
+                    startVisionProgressMonitor();
+                } else {
+                    const error = await response.json();
+                    showToast('Error', error.detail || 'Error al iniciar el procesamiento', 'danger');
+                }
+            } catch (error) {
+                console.error('Vision processing error:', error);
+                showToast('Error', 'Error de conexión', 'danger');
+            }
+        }
+        
+        // Monitor vision processing progress
+        function startVisionProgressMonitor() {
+            const progressDiv = document.getElementById('vision-progress');
+            progressDiv.style.display = 'block';
+            
+            visionCheckInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/vision/clients/status`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const status = data.status;
+                        
+                        document.getElementById('vision-progress-bar').style.width = `${data.progress_percent}%`;
+                        document.getElementById('vision-status-text').textContent = 
+                            `Procesando imagen ${status.progress}/${status.total} | ` +
+                            `Encontradas: ${status.health_related} | Nuevas: ${status.new_institutions} | Duplicadas: ${status.duplicates}`;
+                        
+                        if (!status.is_running && status.progress > 0) {
+                            clearInterval(visionCheckInterval);
+                            progressDiv.style.display = 'none';
+                            
+                            // Show results summary
+                            showToast('Completado', 
+                                `Análisis completado:\n` +
+                                `• ${status.health_related} imágenes de salud detectadas\n` +
+                                `• ${status.new_institutions} nuevas instituciones guardadas\n` +
+                                `• ${status.duplicates} duplicados omitidos`, 
+                                'success'
+                            );
+                            
+                            loadStatistics();
+                            
+                            // Show detailed results
+                            showVisionResults();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Vision progress check error:', error);
+                }
+            }, 2000);
+        }
+        
+        // Show vision extraction results
+        async function showVisionResults() {
+            try {
+                const response = await fetch(`${API_BASE}/vision/clients/results`);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success && data.results.length > 0) {
+                        // Convert vision results to institution format for display
+                        const institutions = data.results
+                            .filter(r => r.is_health_related && r.extracted_data)
+                            .map(r => ({
+                                name: r.extracted_data.name || r.filename,
+                                institution_type: r.extracted_data.institution_type || 'IPS',
+                                address: r.extracted_data.address,
+                                city: r.extracted_data.city,
+                                phone: r.extracted_data.phone,
+                                email: r.extracted_data.email,
+                                website: r.extracted_data.website,
+                                services: r.extracted_data.services || [],
+                                source_file: r.filename
+                            }));
+                        
+                        if (institutions.length > 0) {
+                            currentResults = institutions;
+                            displayResults(institutions);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching vision results:', error);
             }
         }
         
@@ -942,6 +1170,77 @@
             
             new bootstrap.Toast(toast).show();
         }
+        
+        // ================================================================================
+        // AUTHENTICATION FUNCTIONS
+        // ================================================================================
+        
+        // Check if user is authenticated on page load
+        function checkAuth() {
+            const apiKey = localStorage.getItem('api_key');
+            const authStatus = document.getElementById('auth-status');
+            
+            if (apiKey) {
+                authStatus.textContent = 'Autenticado ✓';
+                authStatus.style.color = '#28a745';
+            } else {
+                authStatus.textContent = 'Iniciar Sesión';
+            }
+        }
+        
+        // Show login modal
+        function showLoginModal() {
+            const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+            modal.show();
+        }
+        
+        // Save API key
+        async function saveApiKey() {
+            const apiKey = document.getElementById('api-key-input').value.trim();
+            
+            if (!apiKey) {
+                showToast('Error', 'Por favor ingresa una clave API', 'warning');
+                return;
+            }
+            
+            // Verify the API key
+            try {
+                const response = await fetch(`${API_BASE}/auth/verify?api_key=${encodeURIComponent(apiKey)}`);
+                
+                if (response.ok) {
+                    localStorage.setItem('api_key', apiKey);
+                    bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                    showToast('Éxito', 'Autenticación exitosa', 'success');
+                    checkAuth();
+                } else {
+                    showToast('Error', 'Clave API inválida', 'danger');
+                }
+            } catch (error) {
+                showToast('Error', 'Error de conexión', 'danger');
+            }
+        }
+        
+        // Logout
+        function logout() {
+            localStorage.removeItem('api_key');
+            checkAuth();
+            showToast('Info', 'Sesión cerrada', 'info');
+        }
+        
+        // Initialize authentication check on load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStatistics();
+            checkAuth();
+            
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            // Allow Enter key in API key input
+            document.getElementById('api-key-input')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') saveApiKey();
+            });
+        });
     </script>
 </body>
 </html>

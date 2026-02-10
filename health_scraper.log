@@ -2568,3 +2568,865 @@ WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_ty
 2026-01-26 10:37:49,863 - fastapi - WARNING - email-validator not installed, email fields will be treated as str.
 To install, run: pip install email-validator
 2026-01-26 10:37:49,904 - main - INFO - Completed GET http://localhost:8000/openapi.json - 200 - 0.29s
+2026-01-26 13:08:18,064 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 13:08:34,721 - main - INFO - GET http://localhost:8000/api/v1/vision/clients/list
+2026-01-26 13:08:34,768 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/clients/list - 200 - 0.05s
+2026-01-26 13:08:46,405 - main - INFO - GET http://localhost:8000/api/v1/vision/status
+2026-01-26 13:08:47,141 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:08:47,143 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 13:08:47,143 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:08:47,152 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 13:08:47,152 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:08:47,154 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 13:08:47,154 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:08:47,155 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 13:08:47,156 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:08:47,156 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 13:08:47,157 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:08:47,158 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:08:47,158 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 13:08:47,159 - health_scraper.services.vision_service - INFO - VisionExtractorService initialized with gemini-2.0-flash
+2026-01-26 13:08:47,160 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/status - 200 - 0.76s
+2026-01-26 13:09:04,631 - main - INFO - POST http://localhost:8000/api/v1/vision/clients/process
+2026-01-26 13:09:04,635 - main - INFO - Completed POST http://localhost:8000/api/v1/vision/clients/process - 200 - 0.00s
+2026-01-26 13:09:04,638 - health_scraper.api.endpoints - INFO - Processing image 1/27: WhatsApp Image 2026-01-23 at 4.09.27 PM (1).jpeg
+2026-01-26 13:09:04,765 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:09:04,951 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:09,408 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:09,423 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:09,423 - sqlalchemy.engine.Engine - INFO - [generated in 0.00072s] ('37d9f9cec6441ae6d14a9eb01f90e3366e56e1d4904b859b943a8548da7a71fb', 1, 0)
+2026-01-26 13:09:09,428 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:09,429 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:09,430 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:09,430 - sqlalchemy.engine.Engine - INFO - [cached since 0.007989s ago] ('37d9f9cec6441ae6d14a9eb01f90e3366e56e1d4904b859b943a8548da7a71fb', 1, 0)
+2026-01-26 13:09:09,437 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:09:09,438 - sqlalchemy.engine.Engine - INFO - [generated in 0.00264s] ('AUDIFARMA/MACROMED S.A.S.', '37d9f9cec6441ae6d14a9eb01f90e3366e56e1d4904b859b943a8548da7a71fb', 'FARMACIA', None, None, None, None, None, None, None, None, None, None, None, None, None, None, '["Medicamentos"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:09:09.428837', '2026-01-26 18:09:09.435629')
+2026-01-26 13:09:09,443 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:09:09,479 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:09,481 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:09:09,482 - sqlalchemy.engine.Engine - INFO - [generated in 0.00053s] (59,)
+2026-01-26 13:09:09,483 - health_scraper.database.service - INFO - Created new institution: AUDIFARMA/MACROMED S.A.S. (ID: 59)
+2026-01-26 13:09:09,483 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:09,484 - health_scraper.services.vision_service - INFO - Saved new institution: AUDIFARMA/MACROMED S.A.S. -> ID 59
+2026-01-26 13:09:09,990 - health_scraper.api.endpoints - INFO - Processing image 2/27: WhatsApp Image 2026-01-23 at 4.09.24 PM (1).jpeg
+2026-01-26 13:09:09,993 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.24 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:09:10,068 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:11,169 - health_scraper.api.endpoints - INFO - Processing image 3/27: WhatsApp Image 2026-01-23 at 4.09.28 PM (1).jpeg
+2026-01-26 13:09:11,172 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM (1).jpeg ((1200, 1600))
+2026-01-26 13:09:11,217 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:15,358 - health_scraper.api.endpoints - INFO - Processing image 4/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (4).jpeg
+2026-01-26 13:09:15,361 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (4).jpeg ((1600, 1200))
+2026-01-26 13:09:15,412 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:19,860 - health_scraper.api.endpoints - INFO - Processing image 5/27: WhatsApp Image 2026-01-23 at 4.09.19 PM.jpeg
+2026-01-26 13:09:19,864 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.19 PM.jpeg ((1200, 1600))
+2026-01-26 13:09:19,903 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:26,001 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:26,002 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:26,002 - sqlalchemy.engine.Engine - INFO - [cached since 19.44s ago] ('f10fa9f10cf60805b4b9446431766ad3a6af70440c170df7217b7c56fda2dc2a', 1, 0)
+2026-01-26 13:09:26,004 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:26,006 - health_scraper.services.vision_service - ERROR - Error processing image with Gemini: 1 validation error for HealthInstitution
+website
+  Input should be a valid URL, relative URL without a base [type=url_parsing, input_value='null', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/url_parsing
+2026-01-26 13:09:26,508 - health_scraper.api.endpoints - INFO - Processing image 6/27: WhatsApp Image 2026-01-23 at 4.09.25 PM (3).jpeg
+2026-01-26 13:09:26,511 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM (3).jpeg ((1600, 1200))
+2026-01-26 13:09:26,552 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:31,561 - health_scraper.api.endpoints - INFO - Processing image 7/27: WhatsApp Image 2026-01-23 at 4.09.26 PM.jpeg
+2026-01-26 13:09:31,564 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM.jpeg ((1600, 1200))
+2026-01-26 13:09:31,626 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:37,418 - main - INFO - GET http://localhost:8000/api/v1/vision/clients/status
+2026-01-26 13:09:37,427 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/clients/status - 200 - 0.01s
+2026-01-26 13:09:37,919 - health_scraper.api.endpoints - INFO - Processing image 8/27: WhatsApp Image 2026-01-23 at 4.09.27 PM (3).jpeg
+2026-01-26 13:09:37,923 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM (3).jpeg ((1600, 1200))
+2026-01-26 13:09:38,061 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:39,219 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:39,221 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:39,221 - sqlalchemy.engine.Engine - INFO - [cached since 35.47s ago] ('e05d328133f96d56dea6ce27ff544d5ae879b8eeabcc3b5917f1425e2ac79961', 1, 0)
+2026-01-26 13:09:39,223 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:39,225 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:39,225 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:39,226 - sqlalchemy.engine.Engine - INFO - [cached since 35.47s ago] ('e05d328133f96d56dea6ce27ff544d5ae879b8eeabcc3b5917f1425e2ac79961', 1, 0)
+2026-01-26 13:09:39,228 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:09:39,229 - sqlalchemy.engine.Engine - INFO - [cached since 35.46s ago] ('Subred Integrada de Servicios de Salud Sur Centro Oriente E.S.E.', 'e05d328133f96d56dea6ce27ff544d5ae879b8eeabcc3b5917f1425e2ac79961', 'IPS', None, None, None, None, 'Bogota', None, None, None, '3282828', None, None, None, None, None, '["Urgencias"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:09:39.223888', '2026-01-26 18:09:39.228468')
+2026-01-26 13:09:39,234 - sqlalchemy.engine.Engine - INFO - INSERT INTO contacts (institution_id, name, position, department, email, phone, mobile, contact_type, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:09:39,235 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] (60, None, None, None, None, '3282828', None, 'general', '2026-01-26 18:09:39.234677')
+2026-01-26 13:09:39,236 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:09:39,292 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:39,293 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:09:39,293 - sqlalchemy.engine.Engine - INFO - [cached since 35.48s ago] (60,)
+2026-01-26 13:09:39,294 - health_scraper.database.service - INFO - Created new institution: Subred Integrada de Servicios de Salud Sur Centro Oriente E.S.E. (ID: 60)
+2026-01-26 13:09:39,295 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:39,295 - health_scraper.services.vision_service - INFO - Saved new institution: Subred Integrada de Servicios de Salud Sur Centro Oriente E.S.E. -> ID 60
+2026-01-26 13:09:39,803 - health_scraper.api.endpoints - INFO - Processing image 9/27: WhatsApp Image 2026-01-23 at 4.09.27 PM.jpeg
+2026-01-26 13:09:39,806 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM.jpeg ((1600, 1200))
+2026-01-26 13:09:39,954 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:43,824 - health_scraper.api.endpoints - INFO - Processing image 10/27: WhatsApp Image 2026-01-23 at 4.09.18 PM.jpeg
+2026-01-26 13:09:43,827 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.18 PM.jpeg ((1200, 1600))
+2026-01-26 13:09:43,893 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:48,073 - health_scraper.api.endpoints - INFO - Processing image 11/27: WhatsApp Image 2026-01-23 at 4.09.25 PM (1).jpeg
+2026-01-26 13:09:48,082 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM (1).jpeg ((1200, 1600))
+2026-01-26 13:09:48,184 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:52,593 - health_scraper.api.endpoints - INFO - Processing image 12/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (3).jpeg
+2026-01-26 13:09:52,598 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (3).jpeg ((1600, 1200))
+2026-01-26 13:09:52,670 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:09:56,254 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:56,255 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:56,256 - sqlalchemy.engine.Engine - INFO - [cached since 52.5s ago] ('5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 1, 0)
+2026-01-26 13:09:56,259 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:56,268 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:56,270 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:09:56,272 - sqlalchemy.engine.Engine - INFO - [cached since 52.52s ago] ('5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 1, 0)
+2026-01-26 13:09:56,275 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:09:56,276 - sqlalchemy.engine.Engine - INFO - [cached since 52.51s ago] ('MACROMED S.A.S.', '5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 'FARMACIA', None, None, None, None, 'Bogotá', None, None, None, None, None, None, None, None, None, '["Medication distribution", "POS", "MAC", "PBS/NO PBS"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:09:56.267407', '2026-01-26 18:09:56.275250')
+2026-01-26 13:09:56,293 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:09:56,501 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:09:56,502 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:09:56,503 - sqlalchemy.engine.Engine - INFO - [cached since 52.69s ago] (61,)
+2026-01-26 13:09:56,505 - health_scraper.database.service - INFO - Created new institution: MACROMED S.A.S. (ID: 61)
+2026-01-26 13:09:56,506 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:09:56,507 - health_scraper.services.vision_service - INFO - Saved new institution: MACROMED S.A.S. -> ID 61
+2026-01-26 13:09:57,041 - health_scraper.api.endpoints - INFO - Processing image 13/27: WhatsApp Image 2026-01-23 at 4.09.19 PM (2).jpeg
+2026-01-26 13:09:57,044 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.19 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:09:57,519 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:01,644 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:01,646 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:01,647 - sqlalchemy.engine.Engine - INFO - [cached since 57.89s ago] ('2504af77840d2d208ccabfb7e32f5b02f107189b93748e9cfdefbaad3125d11f', 1, 0)
+2026-01-26 13:10:01,649 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:01,650 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:01,651 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:01,651 - sqlalchemy.engine.Engine - INFO - [cached since 57.9s ago] ('2504af77840d2d208ccabfb7e32f5b02f107189b93748e9cfdefbaad3125d11f', 1, 0)
+2026-01-26 13:10:01,653 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:10:01,654 - sqlalchemy.engine.Engine - INFO - [cached since 57.89s ago] ('SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR OCCIDENTE E.S.E.', '2504af77840d2d208ccabfb7e32f5b02f107189b93748e9cfdefbaad3125d11f', 'IPS', None, None, None, None, 'Bogota [partial]', None, None, None, None, None, None, None, None, None, '["Urgencias [partial]"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:10:01.649671', '2026-01-26 18:10:01.653710')
+2026-01-26 13:10:01,661 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:10:01,697 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:01,698 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:10:01,699 - sqlalchemy.engine.Engine - INFO - [cached since 57.89s ago] (62,)
+2026-01-26 13:10:01,701 - health_scraper.database.service - INFO - Created new institution: SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR OCCIDENTE E.S.E. (ID: 62)
+2026-01-26 13:10:01,701 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:01,702 - health_scraper.services.vision_service - INFO - Saved new institution: SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR OCCIDENTE E.S.E. -> ID 62
+2026-01-26 13:10:02,206 - health_scraper.api.endpoints - INFO - Processing image 14/27: WhatsApp Image 2026-01-23 at 4.09.28 PM.jpeg
+2026-01-26 13:10:02,213 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM.jpeg ((1600, 1200))
+2026-01-26 13:10:02,288 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:08,956 - health_scraper.api.endpoints - INFO - Processing image 15/27: WhatsApp Image 2026-01-23 at 4.09.24 PM (2).jpeg
+2026-01-26 13:10:08,961 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.24 PM (2).jpeg ((1200, 1600))
+2026-01-26 13:10:09,009 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:13,005 - health_scraper.api.endpoints - INFO - Processing image 16/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (2).jpeg
+2026-01-26 13:10:13,008 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:10:13,075 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:18,686 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:18,687 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:18,688 - sqlalchemy.engine.Engine - INFO - [cached since 77.86s ago] ('85ab8f5cc417dbab2ef53b6f83436a2f168d209823075c937402228c53bc38af', 1, 0)
+2026-01-26 13:10:18,689 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:18,690 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:18,691 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:18,692 - sqlalchemy.engine.Engine - INFO - [cached since 77.87s ago] ('85ab8f5cc417dbab2ef53b6f83436a2f168d209823075c937402228c53bc38af', 1, 0)
+2026-01-26 13:10:18,694 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:10:18,694 - sqlalchemy.engine.Engine - INFO - [cached since 77.86s ago] ('Medicamentos - Macromed S.A.S.', '85ab8f5cc417dbab2ef53b6f83436a2f168d209823075c937402228c53bc38af', 'FARMACIA', None, None, None, None, 'Soacha', None, None, None, None, None, None, None, None, None, '["Distributors of medications", "PBS/NO PBS", "Entrega en domicilio"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:10:18.689988', '2026-01-26 18:10:18.694165')
+2026-01-26 13:10:18,696 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:10:18,718 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:18,718 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:10:18,719 - sqlalchemy.engine.Engine - INFO - [cached since 77.84s ago] (63,)
+2026-01-26 13:10:18,720 - health_scraper.database.service - INFO - Created new institution: Medicamentos - Macromed S.A.S. (ID: 63)
+2026-01-26 13:10:18,720 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:18,720 - health_scraper.services.vision_service - INFO - Saved new institution: Medicamentos - Macromed S.A.S. -> ID 63
+2026-01-26 13:10:19,230 - health_scraper.api.endpoints - INFO - Processing image 17/27: WhatsApp Image 2026-01-23 at 4.09.28 PM (2).jpeg
+2026-01-26 13:10:19,232 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:10:19,295 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:23,657 - health_scraper.api.endpoints - INFO - Processing image 18/27: WhatsApp Image 2026-01-23 at 4.09.25 PM.jpeg
+2026-01-26 13:10:23,665 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM.jpeg ((1200, 1600))
+2026-01-26 13:10:23,756 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:28,293 - health_scraper.api.endpoints - INFO - Processing image 19/27: WhatsApp Image 2026-01-23 at 4.09.18 PM (1).jpeg
+2026-01-26 13:10:28,501 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.18 PM (1).jpeg ((1200, 1600))
+2026-01-26 13:10:28,549 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:33,597 - health_scraper.api.endpoints - INFO - Processing image 20/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (1).jpeg
+2026-01-26 13:10:33,799 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:10:33,841 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:37,819 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:37,820 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:37,820 - sqlalchemy.engine.Engine - INFO - [cached since 97s ago] ('bf654d0071773472924aeb19c5a0e73df16eb899a3b1712101ef1768bd45c84f', 1, 0)
+2026-01-26 13:10:37,821 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:37,822 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:37,823 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:37,823 - sqlalchemy.engine.Engine - INFO - [cached since 97s ago] ('bf654d0071773472924aeb19c5a0e73df16eb899a3b1712101ef1768bd45c84f', 1, 0)
+2026-01-26 13:10:37,825 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:10:37,825 - sqlalchemy.engine.Engine - INFO - [cached since 96.99s ago] ('E.S.E. Municipal de Soacha Julio Cesar Peñaloza', 'bf654d0071773472924aeb19c5a0e73df16eb899a3b1712101ef1768bd45c84f', 'IPS', None, None, None, None, 'Soacha', None, None, None, None, None, None, None, None, None, '["Todos los servicios habilitados por la IPS"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:10:37.821931', '2026-01-26 18:10:37.825051')
+2026-01-26 13:10:37,830 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:10:38,339 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:38,343 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:10:38,343 - sqlalchemy.engine.Engine - INFO - [cached since 97.46s ago] (64,)
+2026-01-26 13:10:38,345 - health_scraper.database.service - INFO - Created new institution: E.S.E. Municipal de Soacha Julio Cesar Peñaloza (ID: 64)
+2026-01-26 13:10:38,345 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:38,346 - health_scraper.services.vision_service - INFO - Saved new institution: E.S.E. Municipal de Soacha Julio Cesar Peñaloza -> ID 64
+2026-01-26 13:10:38,847 - health_scraper.api.endpoints - INFO - Processing image 21/27: WhatsApp Image 2026-01-23 at 4.09.17 PM (1).jpeg
+2026-01-26 13:10:39,147 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.17 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:10:39,203 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:45,864 - health_scraper.services.vision_service - ERROR - Failed to parse Gemini response as JSON: Extra data: line 44 column 6 (char 1439)
+2026-01-26 13:10:46,372 - health_scraper.api.endpoints - INFO - Processing image 22/27: WhatsApp Image 2026-01-23 at 4.09.17 PM.jpeg
+2026-01-26 13:10:46,655 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.17 PM.jpeg ((1200, 1600))
+2026-01-26 13:10:46,737 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:51,201 - health_scraper.api.endpoints - INFO - Processing image 23/27: WhatsApp Image 2026-01-23 at 4.09.24 PM.jpeg
+2026-01-26 13:10:51,206 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.24 PM.jpeg ((1600, 1200))
+2026-01-26 13:10:51,250 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:10:54,989 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:54,990 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:54,990 - sqlalchemy.engine.Engine - INFO - [cached since 117.1s ago] ('f6fec6c2f102b0c0bce551b0e10cec7de101e8c59299857d0fa4f2a515bfb842', 1, 0)
+2026-01-26 13:10:55,062 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:55,064 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:55,065 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:10:55,065 - sqlalchemy.engine.Engine - INFO - [cached since 117.2s ago] ('f6fec6c2f102b0c0bce551b0e10cec7de101e8c59299857d0fa4f2a515bfb842', 1, 0)
+2026-01-26 13:10:55,068 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:10:55,069 - sqlalchemy.engine.Engine - INFO - [cached since 117.1s ago] ('SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR E.S.E.', 'f6fec6c2f102b0c0bce551b0e10cec7de101e8c59299857d0fa4f2a515bfb842', 'IPS', None, None, None, None, None, None, None, None, None, None, None, None, None, None, '["Urgencias"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:10:55.062915', '2026-01-26 18:10:55.068736')
+2026-01-26 13:10:55,079 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:10:55,131 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:10:55,132 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:10:55,133 - sqlalchemy.engine.Engine - INFO - [cached since 117.2s ago] (65,)
+2026-01-26 13:10:55,134 - health_scraper.database.service - INFO - Created new institution: SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR E.S.E. (ID: 65)
+2026-01-26 13:10:55,135 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:10:55,135 - health_scraper.services.vision_service - INFO - Saved new institution: SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR E.S.E. -> ID 65
+2026-01-26 13:10:55,643 - health_scraper.api.endpoints - INFO - Processing image 24/27: WhatsApp Image 2026-01-23 at 4.09.25 PM (2).jpeg
+2026-01-26 13:10:55,646 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:10:55,688 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:11:01,922 - health_scraper.api.endpoints - INFO - Processing image 25/27: WhatsApp Image 2026-01-23 at 4.09.28 PM (3).jpeg
+2026-01-26 13:11:01,925 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM (3).jpeg ((1200, 1600))
+2026-01-26 13:11:01,993 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:11:06,166 - health_scraper.api.endpoints - INFO - Processing image 26/27: WhatsApp Image 2026-01-23 at 4.09.27 PM (2).jpeg
+2026-01-26 13:11:06,174 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:11:06,216 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:11:07,942 - health_scraper.api.endpoints - INFO - Processing image 27/27: WhatsApp Image 2026-01-23 at 4.09.19 PM (1).jpeg
+2026-01-26 13:11:07,945 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.19 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:11:08,007 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:11:12,951 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:11:12,952 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:11:12,953 - sqlalchemy.engine.Engine - INFO - [cached since 137.9s ago] ('d6d8484014c4de214aedea24fd69fedad70baf8a4bd36e1703785af7620a72c4', 1, 0)
+2026-01-26 13:11:12,955 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:11:12,957 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:11:12,958 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:11:12,958 - sqlalchemy.engine.Engine - INFO - [cached since 137.9s ago] ('d6d8484014c4de214aedea24fd69fedad70baf8a4bd36e1703785af7620a72c4', 1, 0)
+2026-01-26 13:11:12,963 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:11:12,964 - sqlalchemy.engine.Engine - INFO - [cached since 137.9s ago] ('La Subred Sur', 'd6d8484014c4de214aedea24fd69fedad70baf8a4bd36e1703785af7620a72c4', 'IPS', None, None, None, None, 'Bogota', None, None, None, '3219006446', 'contactenos@subredsur.gov.co', 'https://bogota.gov.co/sdqs', None, None, None, '["Canales para que los usuarios expresen sus PQRS (Channels for users to express their complaints, claims, and requests)", "Buzones de sugerencias en unidades de servicios de salud (Suggestion boxes in health service units)"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:11:12.956208', '2026-01-26 18:11:12.963325')
+2026-01-26 13:11:12,971 - sqlalchemy.engine.Engine - INFO - INSERT INTO contacts (institution_id, name, position, department, email, phone, mobile, contact_type, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-01-26 13:11:12,971 - sqlalchemy.engine.Engine - INFO - [generated in 0.00047s (insertmanyvalues) 1/2 (ordered; batch not supported)] (66, None, None, None, None, '3219006446', None, 'general', '2026-01-26 18:11:12.970648')
+2026-01-26 13:11:12,973 - sqlalchemy.engine.Engine - INFO - INSERT INTO contacts (institution_id, name, position, department, email, phone, mobile, contact_type, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-01-26 13:11:12,973 - sqlalchemy.engine.Engine - INFO - [insertmanyvalues 2/2 (ordered; batch not supported)] (66, None, None, None, 'contactenos@subredsur.gov.co', None, None, 'general', '2026-01-26 18:11:12.970655')
+2026-01-26 13:11:12,976 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:11:13,000 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:11:13,002 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:11:13,002 - sqlalchemy.engine.Engine - INFO - [cached since 137.9s ago] (66,)
+2026-01-26 13:11:13,003 - health_scraper.database.service - INFO - Created new institution: La Subred Sur (ID: 66)
+2026-01-26 13:11:13,004 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:11:13,004 - health_scraper.services.vision_service - INFO - Saved new institution: La Subred Sur -> ID 66
+2026-01-26 13:11:13,522 - health_scraper.api.endpoints - INFO - Clients folder processing complete: 27 processed, 25 new institutions
+2026-01-26 13:11:13,547 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-26 13:11:21,652 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 13:11:21,662 - main - INFO - GET http://localhost:8000/api/v1/vision/clients/status
+2026-01-26 13:11:21,687 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/clients/status - 200 - 0.03s
+2026-01-26 13:11:50,852 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 13:11:50,893 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:11:50,894 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 13:11:50,895 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:11:50,898 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 13:11:50,898 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:11:50,899 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 13:11:50,900 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:11:50,901 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 13:11:50,902 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:11:50,903 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 13:11:50,903 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:11:50,905 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:11:50,906 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 13:11:50,910 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:11:50,954 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 13:11:50,955 - sqlalchemy.engine.Engine - INFO - [generated in 0.00084s] ()
+2026-01-26 13:11:50,961 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 13:11:50,962 - sqlalchemy.engine.Engine - INFO - [generated in 0.00090s] ()
+2026-01-26 13:11:50,965 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 13:11:50,966 - sqlalchemy.engine.Engine - INFO - [generated in 0.00112s] ()
+2026-01-26 13:11:50,969 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 13:11:50,969 - sqlalchemy.engine.Engine - INFO - [generated in 0.00068s] ()
+2026-01-26 13:11:50,972 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:11:50,973 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] ('IPS',)
+2026-01-26 13:11:50,975 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:11:50,976 - sqlalchemy.engine.Engine - INFO - [cached since 0.003549s ago] ('EPS',)
+2026-01-26 13:11:50,984 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:11:50,985 - sqlalchemy.engine.Engine - INFO - [generated in 0.00060s] (10, 0)
+2026-01-26 13:11:50,989 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:11:50,989 - sqlalchemy.engine.Engine - INFO - [generated in 0.00057s] (10, 0)
+2026-01-26 13:11:50,990 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:11:50,991 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.14s
+2026-01-26 13:12:26,498 - main - INFO - GET http://localhost:8000/api/v1/export/csv?limit=5
+2026-01-26 13:12:26,505 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:12:26,514 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:12:26,515 - sqlalchemy.engine.Engine - INFO - [generated in 0.00086s] (10000, 0)
+2026-01-26 13:12:26,525 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:12:26,531 - main - INFO - Completed GET http://localhost:8000/api/v1/export/csv?limit=5 - 200 - 0.03s
+2026-01-26 13:12:41,558 - main - INFO - HEAD http://localhost:8000/api/v1/export/excel?limit=5
+2026-01-26 13:12:41,560 - main - INFO - Completed HEAD http://localhost:8000/api/v1/export/excel?limit=5 - 405 - 0.00s
+2026-01-26 13:12:52,780 - main - INFO - GET http://localhost:8000/api/v1/export/excel?limit=5
+2026-01-26 13:12:52,787 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:12:52,790 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:12:52,791 - sqlalchemy.engine.Engine - INFO - [cached since 29.17s ago] (10000, 0)
+2026-01-26 13:12:52,800 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:12:52,822 - health_scraper.api.endpoints - ERROR - Excel export error: No module named 'openpyxl'
+2026-01-26 13:12:52,823 - main - INFO - Completed GET http://localhost:8000/api/v1/export/excel?limit=5 - 500 - 0.04s
+2026-01-26 13:15:44,888 - main - INFO - GET http://localhost:8000/api/v1/export/excel?limit=5
+2026-01-26 13:15:44,919 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:15:44,928 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:15:44,929 - sqlalchemy.engine.Engine - INFO - [cached since 218.5s ago] (10000, 0)
+2026-01-26 13:15:44,961 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:15:45,022 - health_scraper.api.endpoints - ERROR - Excel export error: No module named 'openpyxl'
+2026-01-26 13:15:45,024 - main - INFO - Completed GET http://localhost:8000/api/v1/export/excel?limit=5 - 500 - 0.14s
+2026-01-26 13:16:08,268 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 13:16:20,573 - main - INFO - GET http://localhost:8000/api/v1/export/excel?limit=5
+2026-01-26 13:16:20,720 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:16:20,721 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 13:16:20,721 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:16:20,732 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 13:16:20,732 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:16:20,734 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 13:16:20,735 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:16:20,736 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 13:16:20,737 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:16:20,743 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 13:16:20,745 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:16:20,749 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:16:20,750 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 13:16:20,857 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:16:20,892 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:16:20,893 - sqlalchemy.engine.Engine - INFO - [generated in 0.00114s] (10000, 0)
+2026-01-26 13:16:20,917 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:16:20,928 - health_scraper.api.endpoints - ERROR - Excel export error: No module named 'openpyxl'
+2026-01-26 13:16:20,929 - main - INFO - Completed GET http://localhost:8000/api/v1/export/excel?limit=5 - 500 - 0.36s
+2026-01-26 13:20:19,920 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 13:20:56,108 - main - INFO - GET http://localhost:8000/api/v1/export/excel
+2026-01-26 13:20:56,196 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:20:56,197 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 13:20:56,198 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:20:56,200 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 13:20:56,201 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:20:56,203 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 13:20:56,206 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:20:56,207 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 13:20:56,208 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:20:56,208 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 13:20:56,209 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:20:56,210 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:20:56,211 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 13:20:56,245 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:20:56,258 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions ORDER BY institutions.data_quality_score DESC NULLS FIRST, institutions.updated_at DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:20:56,259 - sqlalchemy.engine.Engine - INFO - [generated in 0.00144s] (10000, 0)
+2026-01-26 13:20:56,267 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:20:56,571 - main - INFO - Completed GET http://localhost:8000/api/v1/export/excel - 200 - 0.46s
+2026-01-26 13:21:04,663 - main - INFO - POST http://localhost:8000/api/v1/vision/clients/process
+2026-01-26 13:21:04,672 - main - INFO - Completed POST http://localhost:8000/api/v1/vision/clients/process - 200 - 0.01s
+2026-01-26 13:21:05,993 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:21:05,996 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 13:21:05,997 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:21:06,007 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 13:21:06,008 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:21:06,009 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 13:21:06,009 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:21:06,010 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 13:21:06,011 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:21:06,012 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 13:21:06,012 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 13:21:06,013 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:21:06,014 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 13:21:06,014 - health_scraper.services.vision_service - INFO - VisionExtractorService initialized with gemini-2.0-flash
+2026-01-26 13:21:06,015 - health_scraper.api.endpoints - INFO - Processing image 1/27: WhatsApp Image 2026-01-23 at 4.09.27 PM (1).jpeg
+2026-01-26 13:21:06,062 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:21:06,158 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:11,259 - health_scraper.api.endpoints - INFO - Processing image 2/27: WhatsApp Image 2026-01-23 at 4.09.24 PM (1).jpeg
+2026-01-26 13:21:11,502 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.24 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:21:11,563 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:16,397 - health_scraper.api.endpoints - INFO - Processing image 3/27: WhatsApp Image 2026-01-23 at 4.09.28 PM (1).jpeg
+2026-01-26 13:21:16,404 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM (1).jpeg ((1200, 1600))
+2026-01-26 13:21:16,446 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:26,451 - health_scraper.api.endpoints - INFO - Processing image 4/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (4).jpeg
+2026-01-26 13:21:26,512 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (4).jpeg ((1600, 1200))
+2026-01-26 13:21:26,561 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:28,254 - health_scraper.api.endpoints - INFO - Processing image 5/27: WhatsApp Image 2026-01-23 at 4.09.19 PM.jpeg
+2026-01-26 13:21:28,258 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.19 PM.jpeg ((1200, 1600))
+2026-01-26 13:21:28,316 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:29,911 - health_scraper.services.vision_service - ERROR - Error processing image with Gemini: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.', 'status': 'RESOURCE_EXHAUSTED'}}
+2026-01-26 13:21:30,412 - health_scraper.api.endpoints - INFO - Processing image 6/27: WhatsApp Image 2026-01-23 at 4.09.25 PM (3).jpeg
+2026-01-26 13:21:30,415 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM (3).jpeg ((1600, 1200))
+2026-01-26 13:21:30,485 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:38,177 - health_scraper.api.endpoints - INFO - Processing image 7/27: WhatsApp Image 2026-01-23 at 4.09.26 PM.jpeg
+2026-01-26 13:21:38,197 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM.jpeg ((1600, 1200))
+2026-01-26 13:21:38,266 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:42,812 - health_scraper.api.endpoints - INFO - Processing image 8/27: WhatsApp Image 2026-01-23 at 4.09.27 PM (3).jpeg
+2026-01-26 13:21:42,817 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM (3).jpeg ((1600, 1200))
+2026-01-26 13:21:42,901 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:46,518 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:21:46,524 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:21:46,525 - sqlalchemy.engine.Engine - INFO - [generated in 0.00078s] ('4aaf098b1f474e5f6073e5bacd51b15569953d70409a992b792f5554218f4e4d', 1, 0)
+2026-01-26 13:21:46,527 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:21:46,529 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:21:46,530 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:21:46,531 - sqlalchemy.engine.Engine - INFO - [cached since 0.006796s ago] ('4aaf098b1f474e5f6073e5bacd51b15569953d70409a992b792f5554218f4e4d', 1, 0)
+2026-01-26 13:21:46,538 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:21:46,539 - sqlalchemy.engine.Engine - INFO - [generated in 0.00166s] ('Capital Salud EPS', '4aaf098b1f474e5f6073e5bacd51b15569953d70409a992b792f5554218f4e4d', 'EPS', None, None, None, None, 'Bogotá', None, None, None, None, None, None, None, None, None, '["Urgencias"]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:21:46.528681', '2026-01-26 18:21:46.537840')
+2026-01-26 13:21:46,545 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:21:46,583 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:21:46,587 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:21:46,588 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] (67,)
+2026-01-26 13:21:46,590 - health_scraper.database.service - INFO - Created new institution: Capital Salud EPS (ID: 67)
+2026-01-26 13:21:46,591 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:21:46,593 - health_scraper.services.vision_service - INFO - Saved new institution: Capital Salud EPS -> ID 67
+2026-01-26 13:21:47,116 - health_scraper.api.endpoints - INFO - Processing image 9/27: WhatsApp Image 2026-01-23 at 4.09.27 PM.jpeg
+2026-01-26 13:21:47,136 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM.jpeg ((1600, 1200))
+2026-01-26 13:21:47,210 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:54,456 - main - INFO - GET http://localhost:8000/api/v1/vision/clients/status
+2026-01-26 13:21:54,466 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/clients/status - 200 - 0.01s
+2026-01-26 13:21:54,955 - health_scraper.api.endpoints - INFO - Processing image 10/27: WhatsApp Image 2026-01-23 at 4.09.18 PM.jpeg
+2026-01-26 13:21:54,958 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.18 PM.jpeg ((1200, 1600))
+2026-01-26 13:21:55,037 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:21:56,132 - health_scraper.api.endpoints - INFO - Processing image 11/27: WhatsApp Image 2026-01-23 at 4.09.25 PM (1).jpeg
+2026-01-26 13:21:56,135 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM (1).jpeg ((1200, 1600))
+2026-01-26 13:21:56,207 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:00,098 - health_scraper.api.endpoints - INFO - Processing image 12/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (3).jpeg
+2026-01-26 13:22:00,100 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (3).jpeg ((1600, 1200))
+2026-01-26 13:22:00,159 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:04,081 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:04,082 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:04,083 - sqlalchemy.engine.Engine - INFO - [cached since 20.49s ago] ('5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 1, 0)
+2026-01-26 13:22:04,084 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:04,085 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:04,086 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:04,086 - sqlalchemy.engine.Engine - INFO - [cached since 20.49s ago] ('5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 1, 0)
+2026-01-26 13:22:04,087 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:04,088 - health_scraper.services.vision_service - INFO - Duplicate found: MACROMED S.A.S. -> ID 61
+2026-01-26 13:22:04,603 - health_scraper.api.endpoints - INFO - Processing image 13/27: WhatsApp Image 2026-01-23 at 4.09.19 PM (2).jpeg
+2026-01-26 13:22:04,606 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.19 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:22:04,677 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:08,567 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:08,568 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:08,568 - sqlalchemy.engine.Engine - INFO - [cached since 24.97s ago] ('2504af77840d2d208ccabfb7e32f5b02f107189b93748e9cfdefbaad3125d11f', 1, 0)
+2026-01-26 13:22:08,570 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:08,572 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:08,573 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:08,573 - sqlalchemy.engine.Engine - INFO - [cached since 24.98s ago] ('2504af77840d2d208ccabfb7e32f5b02f107189b93748e9cfdefbaad3125d11f', 1, 0)
+2026-01-26 13:22:08,574 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:08,575 - health_scraper.services.vision_service - INFO - Duplicate found: SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR OCCIDENTE E.S.E. -> ID 62
+2026-01-26 13:22:09,077 - health_scraper.api.endpoints - INFO - Processing image 14/27: WhatsApp Image 2026-01-23 at 4.09.28 PM.jpeg
+2026-01-26 13:22:09,080 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM.jpeg ((1600, 1200))
+2026-01-26 13:22:09,130 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:13,980 - health_scraper.api.endpoints - INFO - Processing image 15/27: WhatsApp Image 2026-01-23 at 4.09.24 PM (2).jpeg
+2026-01-26 13:22:13,983 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.24 PM (2).jpeg ((1200, 1600))
+2026-01-26 13:22:14,029 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:18,589 - health_scraper.api.endpoints - INFO - Processing image 16/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (2).jpeg
+2026-01-26 13:22:18,610 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:22:18,656 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:22,942 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:22,943 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:22,944 - sqlalchemy.engine.Engine - INFO - [cached since 39.35s ago] ('5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 1, 0)
+2026-01-26 13:22:22,946 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:22,947 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:22,948 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:22,949 - sqlalchemy.engine.Engine - INFO - [cached since 39.35s ago] ('5fdd4c050e365fa0a29b6535ca6a18511ad7995430d2b0c4c76f0aa3024646c1', 1, 0)
+2026-01-26 13:22:22,950 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:22,951 - health_scraper.services.vision_service - INFO - Duplicate found: MACROMED S.A.S. -> ID 61
+2026-01-26 13:22:23,462 - health_scraper.api.endpoints - INFO - Processing image 17/27: WhatsApp Image 2026-01-23 at 4.09.28 PM (2).jpeg
+2026-01-26 13:22:23,465 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:22:23,528 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:24,707 - health_scraper.api.endpoints - INFO - Processing image 18/27: WhatsApp Image 2026-01-23 at 4.09.25 PM.jpeg
+2026-01-26 13:22:24,710 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM.jpeg ((1200, 1600))
+2026-01-26 13:22:24,773 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:29,022 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:29,023 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:29,023 - sqlalchemy.engine.Engine - INFO - [cached since 48.37s ago] ('0963a711bcfbc1c625b34ba1a8d65c238c737e73f464b9c3497c654d723ddc72', 1, 0)
+2026-01-26 13:22:29,025 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:29,027 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:29,028 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:29,028 - sqlalchemy.engine.Engine - INFO - [cached since 48.37s ago] ('0963a711bcfbc1c625b34ba1a8d65c238c737e73f464b9c3497c654d723ddc72', 1, 0)
+2026-01-26 13:22:29,031 - sqlalchemy.engine.Engine - INFO - INSERT INTO institutions (name, unique_hash, institution_type, specialty_type, registration_number, nit, address, city, department, latitude, longitude, phone, email, website, affiliation, legal_representative, medical_director, services, specialties, treatments, certification_level, accreditations, bed_capacity, employee_count, has_it_team, it_department_name, technology_stack, data_quality_score, source_url, scraped_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-26 13:22:29,032 - sqlalchemy.engine.Engine - INFO - [cached since 48.36s ago] ('SUBRED INTEGRADA DE SERVICIOS DE SALUD CENTRO ORIENTE E.S.E.', '0963a711bcfbc1c625b34ba1a8d65c238c737e73f464b9c3497c654d723ddc72', 'IPS', None, None, None, None, None, None, None, None, None, None, None, None, None, None, '[]', '[]', '[]', None, '[]', None, None, 0, None, '[]', None, None, '2026-01-26 18:22:29.026151', '2026-01-26 18:22:29.031384')
+2026-01-26 13:22:29,034 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 13:22:29,058 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:29,059 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id, institutions.name, institutions.unique_hash, institutions.institution_type, institutions.specialty_type, institutions.registration_number, institutions.nit, institutions.address, institutions.city, institutions.department, institutions.latitude, institutions.longitude, institutions.phone, institutions.email, institutions.website, institutions.affiliation, institutions.legal_representative, institutions.medical_director, institutions.services, institutions.specialties, institutions.treatments, institutions.certification_level, institutions.accreditations, institutions.bed_capacity, institutions.employee_count, institutions.has_it_team, institutions.it_department_name, institutions.technology_stack, institutions.data_quality_score, institutions.source_url, institutions.scraped_at, institutions.updated_at 
+FROM institutions 
+WHERE institutions.id = ?
+2026-01-26 13:22:29,059 - sqlalchemy.engine.Engine - INFO - [cached since 48.34s ago] (68,)
+2026-01-26 13:22:29,061 - health_scraper.database.service - INFO - Created new institution: SUBRED INTEGRADA DE SERVICIOS DE SALUD CENTRO ORIENTE E.S.E. (ID: 68)
+2026-01-26 13:22:29,061 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:29,062 - health_scraper.services.vision_service - INFO - Saved new institution: SUBRED INTEGRADA DE SERVICIOS DE SALUD CENTRO ORIENTE E.S.E. -> ID 68
+2026-01-26 13:22:29,575 - health_scraper.api.endpoints - INFO - Processing image 19/27: WhatsApp Image 2026-01-23 at 4.09.18 PM (1).jpeg
+2026-01-26 13:22:29,596 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.18 PM (1).jpeg ((1200, 1600))
+2026-01-26 13:22:29,664 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:30,664 - health_scraper.services.vision_service - ERROR - Error processing image with Gemini: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.', 'status': 'RESOURCE_EXHAUSTED'}}
+2026-01-26 13:22:31,169 - health_scraper.api.endpoints - INFO - Processing image 20/27: WhatsApp Image 2026-01-23 at 4.09.26 PM (1).jpeg
+2026-01-26 13:22:31,171 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.26 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:22:31,236 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:35,204 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:35,205 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:35,206 - sqlalchemy.engine.Engine - INFO - [cached since 54.55s ago] ('bf654d0071773472924aeb19c5a0e73df16eb899a3b1712101ef1768bd45c84f', 1, 0)
+2026-01-26 13:22:35,207 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:35,208 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:35,209 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:35,210 - sqlalchemy.engine.Engine - INFO - [cached since 54.55s ago] ('bf654d0071773472924aeb19c5a0e73df16eb899a3b1712101ef1768bd45c84f', 1, 0)
+2026-01-26 13:22:35,211 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:35,211 - health_scraper.services.vision_service - INFO - Duplicate found: E.S.E. Municipal de Soacha Julio Cesar Peñaloza -> ID 64
+2026-01-26 13:22:35,724 - health_scraper.api.endpoints - INFO - Processing image 21/27: WhatsApp Image 2026-01-23 at 4.09.17 PM (1).jpeg
+2026-01-26 13:22:35,727 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.17 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:22:35,831 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:44,991 - health_scraper.services.vision_service - ERROR - Failed to parse Gemini response as JSON: Expecting ',' delimiter: line 40 column 5 (char 1375)
+2026-01-26 13:22:45,502 - health_scraper.api.endpoints - INFO - Processing image 22/27: WhatsApp Image 2026-01-23 at 4.09.17 PM.jpeg
+2026-01-26 13:22:45,504 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.17 PM.jpeg ((1200, 1600))
+2026-01-26 13:22:45,566 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:49,900 - health_scraper.api.endpoints - INFO - Processing image 23/27: WhatsApp Image 2026-01-23 at 4.09.24 PM.jpeg
+2026-01-26 13:22:49,902 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.24 PM.jpeg ((1600, 1200))
+2026-01-26 13:22:49,960 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:53,792 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:53,793 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:53,794 - sqlalchemy.engine.Engine - INFO - [cached since 73.14s ago] ('f6fec6c2f102b0c0bce551b0e10cec7de101e8c59299857d0fa4f2a515bfb842', 1, 0)
+2026-01-26 13:22:53,795 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:53,796 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:22:53,796 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:22:53,796 - sqlalchemy.engine.Engine - INFO - [cached since 73.14s ago] ('f6fec6c2f102b0c0bce551b0e10cec7de101e8c59299857d0fa4f2a515bfb842', 1, 0)
+2026-01-26 13:22:53,797 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:22:53,798 - health_scraper.services.vision_service - INFO - Duplicate found: SUBRED INTEGRADA DE SERVICIOS DE SALUD SUR E.S.E. -> ID 65
+2026-01-26 13:22:54,306 - health_scraper.api.endpoints - INFO - Processing image 24/27: WhatsApp Image 2026-01-23 at 4.09.25 PM (2).jpeg
+2026-01-26 13:22:54,309 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.25 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:22:54,372 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:22:58,566 - health_scraper.api.endpoints - INFO - Processing image 25/27: WhatsApp Image 2026-01-23 at 4.09.28 PM (3).jpeg
+2026-01-26 13:22:58,569 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.28 PM (3).jpeg ((1200, 1600))
+2026-01-26 13:22:58,640 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:23:02,929 - health_scraper.api.endpoints - INFO - Processing image 26/27: WhatsApp Image 2026-01-23 at 4.09.27 PM (2).jpeg
+2026-01-26 13:23:02,936 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.27 PM (2).jpeg ((1600, 1200))
+2026-01-26 13:23:02,999 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:23:07,901 - health_scraper.api.endpoints - INFO - Processing image 27/27: WhatsApp Image 2026-01-23 at 4.09.19 PM (1).jpeg
+2026-01-26 13:23:07,904 - health_scraper.services.vision_service - INFO - Processing image: WhatsApp Image 2026-01-23 at 4.09.19 PM (1).jpeg ((1600, 1200))
+2026-01-26 13:23:07,973 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-01-26 13:23:12,099 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:23:12,100 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:23:12,100 - sqlalchemy.engine.Engine - INFO - [cached since 94.37s ago] ('d6d8484014c4de214aedea24fd69fedad70baf8a4bd36e1703785af7620a72c4', 1, 0)
+2026-01-26 13:23:12,102 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:23:12,103 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:23:12,104 - sqlalchemy.engine.Engine - INFO - SELECT institutions.id AS institutions_id, institutions.name AS institutions_name, institutions.unique_hash AS institutions_unique_hash, institutions.institution_type AS institutions_institution_type, institutions.specialty_type AS institutions_specialty_type, institutions.registration_number AS institutions_registration_number, institutions.nit AS institutions_nit, institutions.address AS institutions_address, institutions.city AS institutions_city, institutions.department AS institutions_department, institutions.latitude AS institutions_latitude, institutions.longitude AS institutions_longitude, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.website AS institutions_website, institutions.affiliation AS institutions_affiliation, institutions.legal_representative AS institutions_legal_representative, institutions.medical_director AS institutions_medical_director, institutions.services AS institutions_services, institutions.specialties AS institutions_specialties, institutions.treatments AS institutions_treatments, institutions.certification_level AS institutions_certification_level, institutions.accreditations AS institutions_accreditations, institutions.bed_capacity AS institutions_bed_capacity, institutions.employee_count AS institutions_employee_count, institutions.has_it_team AS institutions_has_it_team, institutions.it_department_name AS institutions_it_department_name, institutions.technology_stack AS institutions_technology_stack, institutions.data_quality_score AS institutions_data_quality_score, institutions.source_url AS institutions_source_url, institutions.scraped_at AS institutions_scraped_at, institutions.updated_at AS institutions_updated_at 
+FROM institutions 
+WHERE institutions.unique_hash = ?
+ LIMIT ? OFFSET ?
+2026-01-26 13:23:12,104 - sqlalchemy.engine.Engine - INFO - [cached since 94.37s ago] ('d6d8484014c4de214aedea24fd69fedad70baf8a4bd36e1703785af7620a72c4', 1, 0)
+2026-01-26 13:23:12,105 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:23:12,106 - health_scraper.services.vision_service - INFO - Duplicate found: LA SUBRED SUR -> ID 66
+2026-01-26 13:23:12,614 - health_scraper.api.endpoints - INFO - Clients folder processing complete: 27 processed, 18 new institutions
+2026-01-26 13:24:11,302 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 13:24:11,306 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:24:11,312 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 13:24:11,313 - sqlalchemy.engine.Engine - INFO - [generated in 0.00087s] ()
+2026-01-26 13:24:11,326 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 13:24:11,327 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] ()
+2026-01-26 13:24:11,331 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 13:24:11,332 - sqlalchemy.engine.Engine - INFO - [generated in 0.00108s] ()
+2026-01-26 13:24:11,345 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 13:24:11,345 - sqlalchemy.engine.Engine - INFO - [generated in 0.00096s] ()
+2026-01-26 13:24:11,360 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:24:11,361 - sqlalchemy.engine.Engine - INFO - [generated in 0.00984s] ('IPS',)
+2026-01-26 13:24:11,364 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:24:11,364 - sqlalchemy.engine.Engine - INFO - [cached since 0.01333s ago] ('EPS',)
+2026-01-26 13:24:11,378 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:24:11,379 - sqlalchemy.engine.Engine - INFO - [generated in 0.00092s] (10, 0)
+2026-01-26 13:24:11,396 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:24:11,397 - sqlalchemy.engine.Engine - INFO - [generated in 0.00089s] (10, 0)
+2026-01-26 13:24:11,406 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:24:11,407 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.10s
+2026-01-26 13:24:30,696 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Odontolog%C3%ADa%20especializada%20en%20Ortodoncia%20en%20Soacha
+2026-01-26 13:24:30,702 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Odontolog%C3%ADa%20especializada%20en%20Ortodoncia%20en%20Soacha - 200 - 0.01s
+2026-01-26 13:24:30,725 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Odontolog%C3%ADa%20especializada%20en%20Ortodoncia%20en%20Soacha
+2026-01-26 13:24:30,743 - health_scraper.api.endpoints - ERROR - Search error: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 13:24:30,744 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Odontolog%C3%ADa%20especializada%20en%20Ortodoncia%20en%20Soacha - 200 - 0.02s
+2026-01-26 13:24:39,362 - main - INFO - GET http://localhost:8000/api/v1/search/parse?query=Ortodoncista
+2026-01-26 13:24:39,365 - main - INFO - Completed GET http://localhost:8000/api/v1/search/parse?query=Ortodoncista - 200 - 0.00s
+2026-01-26 13:24:39,381 - main - INFO - GET http://localhost:8000/api/v1/search/prompt?query=Ortodoncista
+2026-01-26 13:24:39,384 - health_scraper.api.endpoints - ERROR - Search error: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 13:24:39,385 - main - INFO - Completed GET http://localhost:8000/api/v1/search/prompt?query=Ortodoncista - 200 - 0.00s
+2026-01-26 13:24:48,725 - main - INFO - GET http://localhost:8000/api/v1/vision/clients/status
+2026-01-26 13:24:48,730 - main - INFO - Completed GET http://localhost:8000/api/v1/vision/clients/status - 200 - 0.01s
+2026-01-26 13:30:14,317 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 13:30:14,456 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:30:14,489 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 13:30:14,491 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] ()
+2026-01-26 13:30:14,516 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 13:30:14,517 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] ()
+2026-01-26 13:30:14,520 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 13:30:14,520 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] ()
+2026-01-26 13:30:14,523 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 13:30:14,523 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] ()
+2026-01-26 13:30:14,542 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:30:14,542 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] ('IPS',)
+2026-01-26 13:30:14,547 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:30:14,547 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] ('EPS',)
+2026-01-26 13:30:14,560 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:30:14,561 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] (10, 0)
+2026-01-26 13:30:14,569 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:30:14,570 - sqlalchemy.engine.Engine - INFO - [cached since 398.1s ago] (10, 0)
+2026-01-26 13:30:14,575 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:30:14,595 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.28s
+2026-01-26 13:30:51,550 - main - INFO - GET http://localhost:8000/?id=f4279dc3-5678-4aa1-841a-9f0bc93418c8&vscodeBrowserReqId=1769452252425
+2026-01-26 13:30:51,621 - main - INFO - Completed GET http://localhost:8000/?id=f4279dc3-5678-4aa1-841a-9f0bc93418c8&vscodeBrowserReqId=1769452252425 - 200 - 0.07s
+2026-01-26 13:30:52,471 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 13:30:52,479 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 13:30:52,484 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 13:30:52,485 - sqlalchemy.engine.Engine - INFO - [cached since 441.9s ago] ()
+2026-01-26 13:30:52,490 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 13:30:52,491 - sqlalchemy.engine.Engine - INFO - [cached since 441.9s ago] ()
+2026-01-26 13:30:52,492 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 13:30:52,493 - sqlalchemy.engine.Engine - INFO - [cached since 441.9s ago] ()
+2026-01-26 13:30:52,495 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 13:30:52,495 - sqlalchemy.engine.Engine - INFO - [cached since 441.9s ago] ()
+2026-01-26 13:30:52,498 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:30:52,498 - sqlalchemy.engine.Engine - INFO - [cached since 441.9s ago] ('IPS',)
+2026-01-26 13:30:52,500 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 13:30:52,500 - sqlalchemy.engine.Engine - INFO - [cached since 441.9s ago] ('EPS',)
+2026-01-26 13:30:52,503 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:30:52,504 - sqlalchemy.engine.Engine - INFO - [cached since 441.8s ago] (10, 0)
+2026-01-26 13:30:52,508 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 13:30:52,508 - sqlalchemy.engine.Engine - INFO - [cached since 441.8s ago] (10, 0)
+2026-01-26 13:30:52,510 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 13:30:52,513 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 0.04s
+2026-01-26 13:30:59,632 - main - INFO - GET http://localhost:8000/api/v1/scrape/sample?limit=50
+2026-01-26 13:30:59,677 - health_scraper.api.endpoints - ERROR - Error scraping sample institutions: cannot import name 'Location' from 'health_scraper.models.institution' (/home/asperjasp/asperjasp/Job/AI-Medic/Scrapper/health_scraper/models/institution.py)
+2026-01-26 13:30:59,684 - main - INFO - Completed GET http://localhost:8000/api/v1/scrape/sample?limit=50 - 500 - 0.05s
+2026-01-26 13:33:25,947 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-26 13:34:09,484 - __mp_main__ - WARNING - No API_KEY set in .env. Generated temporary key: N8A45sKU5N5RQ7kdTw4gJ3B8vsPIaXXkvzTbwHtHvAA
+2026-01-26 13:34:09,485 - __mp_main__ - WARNING - Add this to your .env file: API_KEY=N8A45sKU5N5RQ7kdTw4gJ3B8vsPIaXXkvzTbwHtHvAA
+2026-01-26 13:34:10,471 - main - WARNING - No API_KEY set in .env. Generated temporary key: gJSpcVeGCSezbilICYmHNYEMf232mD3rGuWQlD3LZ-g
+2026-01-26 13:34:10,473 - main - WARNING - Add this to your .env file: API_KEY=gJSpcVeGCSezbilICYmHNYEMf232mD3rGuWQlD3LZ-g
+2026-01-26 13:34:10,585 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 13:57:40,898 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-26 13:58:26,983 - main - INFO - Starting Health Institutions Scraper API
+2026-01-26 13:59:50,384 - main - INFO - GET http://localhost:8000/api/v1/auth/verify?api_key=aimedic-scraper-2024-secure-key
+2026-01-26 13:59:50,389 - main - INFO - Completed GET http://localhost:8000/api/v1/auth/verify?api_key=aimedic-scraper-2024-secure-key - 200 - 0.01s
+2026-01-26 14:00:38,227 - main - INFO - HEAD http://localhost:8000/api/v1/secure/export/excel?api_key=aimedic-scraper-2024-secure-key
+2026-01-26 14:00:38,228 - main - INFO - Completed HEAD http://localhost:8000/api/v1/secure/export/excel?api_key=aimedic-scraper-2024-secure-key - 405 - 0.00s
+2026-01-26 14:12:04,804 - main - INFO - GET http://localhost:8000/
+2026-01-26 14:12:07,353 - main - INFO - Completed GET http://localhost:8000/ - 200 - 2.64s
+2026-01-26 14:12:44,113 - main - INFO - GET http://localhost:8000/api/v1/database/statistics
+2026-01-26 14:12:58,808 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 14:12:59,363 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("institutions")
+2026-01-26 14:12:59,444 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 14:13:00,415 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("contacts")
+2026-01-26 14:13:00,481 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 14:13:00,507 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("social_media")
+2026-01-26 14:13:00,508 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 14:13:00,513 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("search_queries")
+2026-01-26 14:13:00,515 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 14:13:00,533 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("scraping_jobs")
+2026-01-26 14:13:00,534 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-26 14:13:00,690 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-26 14:13:00,731 - health_scraper.database.service - INFO - Database initialized: sqlite:///health_institutions.db
+2026-01-26 14:13:04,119 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-26 14:13:07,137 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions
+2026-01-26 14:13:07,140 - sqlalchemy.engine.Engine - INFO - [generated in 0.02224s] ()
+2026-01-26 14:13:07,436 - sqlalchemy.engine.Engine - INFO - SELECT count(contacts.id) AS count_1 
+FROM contacts
+2026-01-26 14:13:07,437 - sqlalchemy.engine.Engine - INFO - [generated in 0.00129s] ()
+2026-01-26 14:13:07,449 - sqlalchemy.engine.Engine - INFO - SELECT count(social_media.id) AS count_1 
+FROM social_media
+2026-01-26 14:13:07,449 - sqlalchemy.engine.Engine - INFO - [generated in 0.00107s] ()
+2026-01-26 14:13:07,542 - sqlalchemy.engine.Engine - INFO - SELECT count(search_queries.id) AS count_1 
+FROM search_queries
+2026-01-26 14:13:07,543 - sqlalchemy.engine.Engine - INFO - [generated in 0.00122s] ()
+2026-01-26 14:13:07,734 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 14:13:07,735 - sqlalchemy.engine.Engine - INFO - [generated in 0.00182s] ('IPS',)
+2026-01-26 14:13:07,921 - sqlalchemy.engine.Engine - INFO - SELECT count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.institution_type = ?
+2026-01-26 14:13:07,922 - sqlalchemy.engine.Engine - INFO - [cached since 0.1893s ago] ('EPS',)
+2026-01-26 14:13:08,252 - sqlalchemy.engine.Engine - INFO - SELECT institutions.city AS institutions_city, count(institutions.id) AS count_1 
+FROM institutions GROUP BY institutions.city ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 14:13:08,253 - sqlalchemy.engine.Engine - INFO - [generated in 0.00160s] (10, 0)
+2026-01-26 14:13:08,468 - sqlalchemy.engine.Engine - INFO - SELECT institutions.specialty_type AS institutions_specialty_type, count(institutions.id) AS count_1 
+FROM institutions 
+WHERE institutions.specialty_type IS NOT NULL GROUP BY institutions.specialty_type ORDER BY count(institutions.id) DESC
+ LIMIT ? OFFSET ?
+2026-01-26 14:13:08,469 - sqlalchemy.engine.Engine - INFO - [generated in 0.00125s] (10, 0)
+2026-01-26 14:13:08,779 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2026-01-26 14:13:09,163 - main - INFO - Completed GET http://localhost:8000/api/v1/database/statistics - 200 - 25.05s
+2026-01-26 14:13:42,034 - main - INFO - GET http://localhost:8000/favicon.ico
+2026-01-26 14:13:42,331 - main - INFO - Completed GET http://localhost:8000/favicon.ico - 404 - 0.30s
+2026-01-26 14:48:23,541 - main - INFO - GET http://localhost:8000/api/v1/secure/export/excel?api_key=aimedic-scraper-2024-secure-key
+2026-01-26 14:48:25,068 - health_scraper.api.endpoints - ERROR - Excel export error: 'Query' object has no attribute 'lower'
+2026-01-26 14:48:25,168 - main - INFO - Completed GET http://localhost:8000/api/v1/secure/export/excel?api_key=aimedic-scraper-2024-secure-key - 500 - 1.68s
+2026-01-26 14:50:49,477 - main - INFO - Shutting down Health Institutions Scraper API
+2026-01-26 14:51:46,497 - main - INFO - Starting Health Institutions Scraper API

@@ -400,31 +400,50 @@ IMPORTANT RULES:
         except ValueError:
             inst_type = InstitutionType.OTRO
         
+        # Clean up extracted data - handle "null" strings and invalid values
+        def clean_value(val):
+            """Clean up extracted values, handling 'null' strings."""
+            if val is None or val == "null" or val == "None" or val == "":
+                return None
+            return val
+        
+        # Validate website URL
+        website = clean_value(extracted_data.get("website"))
+        if website and not website.startswith(('http://', 'https://')):
+            # Try to fix common issues
+            if '.' in website:
+                website = f"https://{website}"
+            else:
+                website = None
+        
         # Create contacts
         contacts = []
-        if extracted_data.get("phone"):
+        phone = clean_value(extracted_data.get("phone"))
+        email = clean_value(extracted_data.get("email"))
+        
+        if phone:
             contacts.append(Contact(
-                phone=extracted_data.get("phone"),
+                phone=phone,
                 contact_type=ContactType.GENERAL
             ))
-        if extracted_data.get("email"):
+        if email:
             contacts.append(Contact(
-                email=extracted_data.get("email"),
+                email=email,
                 contact_type=ContactType.GENERAL
             ))
         
         # Create the institution model (no Location class - direct fields)
         institution = HealthInstitution(
-            name=extracted_data.get("name"),
+            name=clean_value(extracted_data.get("name")),
             institution_type=inst_type,
-            nit=extracted_data.get("nit"),
-            registration_number=extracted_data.get("registration_number"),
-            address=extracted_data.get("address"),
-            city=extracted_data.get("city"),
-            department=extracted_data.get("department"),
-            phone=extracted_data.get("phone"),
-            email=extracted_data.get("email"),
-            website=extracted_data.get("website"),
+            nit=clean_value(extracted_data.get("nit")),
+            registration_number=clean_value(extracted_data.get("registration_number")),
+            address=clean_value(extracted_data.get("address")),
+            city=clean_value(extracted_data.get("city")),
+            department=clean_value(extracted_data.get("department")),
+            phone=phone,
+            email=email,
+            website=website,
             contacts=contacts,
             services=extracted_data.get("services") or [],
             specialties=extracted_data.get("specialties") or [],

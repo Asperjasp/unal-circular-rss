@@ -1,9 +1,12 @@
 import logging
 import os
 import time
+import secrets
 from pathlib import Path
+from typing import Optional
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, HTTPException, status
+from fastapi.security import APIKeyHeader, APIKeyQuery
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,6 +26,44 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+# ================================================================================
+# API KEY AUTHENTICATION
+# ================================================================================
+# Set API_KEY in your .env file. If not set, a random one will be generated.
+# 
+# Usage options:
+#   1. Header: X-API-Key: your-api-key
+#   2. Query param: ?api_key=your-api-key
+#   3. Frontend uses session token stored in localStorage
+# ================================================================================
+
+API_KEY = os.getenv("API_KEY")
+if not API_KEY:
+    # Generate a random API key if not set
+    API_KEY = secrets.token_urlsafe(32)
+    logger.warning(f"No API_KEY set in .env. Generated temporary key: {API_KEY}")
+    logger.warning("Add this to your .env file: API_KEY=" + API_KEY)
+
+# Security schemes
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+api_key_query = APIKeyQuery(name="api_key", auto_error=False)
+
+async def verify_api_key(
+    api_key_header_value: str = Depends(api_key_header),
+    api_key_query_value: str = Depends(api_key_query)
+) -> str:
+    """Verify API key from header or query parameter"""
+    api_key = api_key_header_value or api_key_query_value
+    
+    if api_key == API_KEY:
+        return api_key
+    
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid or missing API key",
+        headers={"WWW-Authenticate": "ApiKey"}
+    )
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -140,6 +181,175 @@ async def health_check():
         "service": "health-scraper-api",
         "version": "1.0.0"
     }
+
+
+# ================================================================================
+# AUTHENTICATION ENDPOINTS
+# ================================================================================
+
+@app.post("/api/v1/auth/login", tags=["Authentication"])
+async def login(api_key: str):
+    """
+    Verify API key and return authentication status.
+    
+    Use this to check if your API key is valid before making protected requests.
+    """
+    if api_key == API_KEY:
+        return {
+            "success": True,
+            "message": "Authentication successful",
+            "authenticated": True
+        }
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid API key"
+    )
+
+
+@app.get("/api/v1/auth/verify", tags=["Authentication"])
+async def verify_auth(api_key: str = Depends(verify_api_key)):
+    """Verify if current API key is valid"""
+    return {"authenticated": True, "message": "API key is valid"}
+
+
+# ================================================================================
+# PROTECTED EXPORT ENDPOINTS (require API key)
+# ================================================================================
+
+@app.get("/api/v1/secure/export/csv", tags=["Secure Export"])
+async def secure_export_csv(
+    api_key: str = Depends(verify_api_key),
+    institution_type: Optional[str] = None,
+    city: Optional[str] = None
+):
+    """
+    🔐 PROTECTED: Download all institutions as CSV file.
+    
+    Requires API key authentication via:
+    - Header: X-API-Key: your-key
+    - Query: ?api_key=your-key
+    """
+    import io
+    import csv
+    import asyncio
+    from health_scraper.database.service import get_db_service
+    
+    db = get_db_service()
+    
+    loop = asyncio.get_event_loop()
+    institutions = await loop.run_in_executor(
+        None,
+        lambda: db.search_institutions(
+            institution_type=institution_type,
+            city=city,
+            limit=10000
+        )
+    )
+    
+    # Create CSV in memory
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Write header
+    writer.writerow([
+        'ID', 'Nombre', 'Tipo', 'Especialidad', 'NIT', 'Dirección',
+        'Ciudad', 'Departamento', 'Teléfono', 'Email', 'Sitio Web',
+        'LinkedIn', 'Twitter', 'Fuente'
+    ])
+    
+    for inst in institutions:
+        writer.writerow([
+            inst.id, inst.name, inst.institution_type, inst.specialty_type,
+            inst.nit, inst.address, inst.city, inst.department,
+            inst.phone, inst.email, inst.website, inst.linkedin_url,
+            inst.twitter_url, inst.source
+        ])
+    
+    output.seek(0)
+    
+    from fastapi.responses import StreamingResponse
+    return StreamingResponse(
+        io.BytesIO(output.getvalue().encode('utf-8')),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=instituciones_salud.csv"
+        }
+    )
+
+
+@app.get("/api/v1/secure/export/excel", tags=["Secure Export"])
+async def secure_export_excel(
+    api_key: str = Depends(verify_api_key),
+    institution_type: Optional[str] = None,
+    city: Optional[str] = None
+):
+    """
+    🔐 PROTECTED: Download all institutions as Excel file.
+    
+    Requires API key authentication via:
+    - Header: X-API-Key: your-key
+    - Query: ?api_key=your-key
+    """
+    import io
+    import asyncio
+    from health_scraper.database.service import get_db_service
+    
+    try:
+        import pandas as pd
+    except ImportError:
+        raise HTTPException(
+            status_code=500, 
+            detail="pandas is required for Excel export"
+        )
+    
+    db = get_db_service()
+    
+    loop = asyncio.get_event_loop()
+    institutions = await loop.run_in_executor(
+        None,
+        lambda: db.search_institutions(
+            institution_type=institution_type,
+            city=city,
+            limit=10000
+        )
+    )
+    
+    # Create DataFrame
+    data = []
+    for inst in institutions:
+        data.append({
+            'ID': inst.id,
+            'Nombre': inst.name,
+            'Tipo': inst.institution_type,
+            'Especialidad': inst.specialty_type,
+            'NIT': inst.nit,
+            'Dirección': inst.address,
+            'Ciudad': inst.city,
+            'Departamento': inst.department,
+            'Teléfono': inst.phone,
+            'Email': inst.email,
+            'Sitio Web': inst.website,
+            'LinkedIn': inst.linkedin_url,
+            'Twitter': inst.twitter_url,
+            'Fuente': inst.source
+        })
+    
+    df = pd.DataFrame(data)
+    
+    # Write to Excel
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, sheet_name='Instituciones', index=False)
+    output.seek(0)
+    
+    from fastapi.responses import StreamingResponse
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": "attachment; filename=instituciones_salud.xlsx"
+        }
+    )
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
