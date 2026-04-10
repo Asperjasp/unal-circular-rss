@@ -5,6 +5,7 @@
 # Web Framework
 fastapi>=0.104.1
 uvicorn>=0.24.0
+jinja2>=3.1.2
 
 # Web Scraping
 beautifulsoup4>=4.12.2
@@ -43,3 +44,9 @@ python-multipart>=0.0.6
 
 # Web Framework (updated for anyio 4.x support)
 fastapi>=0.110.0
+
+# ── Integrations ──────────────────────────────────
+# Google Calendar API
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0
