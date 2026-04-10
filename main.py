@@ -14,6 +14,9 @@ from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 
 from health_scraper.api.endpoints import router
+from health_scraper.integrations.integration_endpoints import router as integrations_router
+from health_scraper.integrations.pipeline_endpoints import router as pipeline_router, connect_router
+from health_scraper.integrations.prospect_intel_endpoints import router as prospect_intel_router
 from health_scraper.scrapers.base_scraper import BaseHealthScraper
 
 # Load environment variables
@@ -126,8 +129,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API router
+# Include API routers
 app.include_router(router)
+app.include_router(integrations_router)
+app.include_router(pipeline_router)
+app.include_router(connect_router)
+app.include_router(prospect_intel_router)
 
 # Setup templates directory for frontend
 templates_dir = Path(__file__).parent / "templates"
@@ -138,10 +145,31 @@ static_dir = Path(__file__).parent / "static"
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
+@app.get("/dashboard", response_class=HTMLResponse, include_in_schema=False)
+async def serve_dashboard(request: Request):
+    """Serve the integrated dashboard with Linear, HubSpot, Calendar"""
+    dashboard_template = templates_dir / "dashboard.html"
+    if dashboard_template.exists():
+        return FileResponse(str(dashboard_template))
+    return HTMLResponse(content="<h1>Dashboard not found</h1>", status_code=404)
+
+@app.get("/prospecting", response_class=HTMLResponse, include_in_schema=False)
+async def serve_prospecting(request: Request):
+    """Prospect Intelligence — Perplexity search + LinkedIn M1/M2/M3 + Zoho email"""
+    prospecting_page = static_dir / "prospecting.html"
+    if prospecting_page.exists():
+        return FileResponse(str(prospecting_page))
+    return HTMLResponse(content="<h1>Prospecting panel not found</h1>", status_code=404)
+
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend(request: Request):
-    """Serve the frontend HTML page"""
-    # First try templates directory
+    """Serve the frontend HTML page - redirects to dashboard"""
+    # Serve the integrated dashboard by default
+    dashboard_template = templates_dir / "dashboard.html"
+    if dashboard_template.exists():
+        return FileResponse(str(dashboard_template))
+    
+    # Fallback to original templates
     index_template = templates_dir / "index.html"
     if index_template.exists():
         return FileResponse(str(index_template))

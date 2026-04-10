@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aimedic — Prospect Intelligence</title>
+<style>
+  :root {
+    --bg:       #061a18;
+    --bg2:      #082320;
+    --bg3:      #0d2a28;
+    --teal1:    #189685;
+    --teal2:    #006F80;
+    --teal3:    #0d9e8a;
+    --text:     #ceeaea;
+    --muted:    #4a8a8a;
+    --border:   rgba(24,150,133,0.25);
+    --danger:   #ff6b6b;
+    --font:     'DM Mono','Fira Code','Courier New',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 40%, #0d3d3d 100%);
+    font-family: var(--font);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(8,35,32,0.85);
+    backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--teal1), var(--teal2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+  .logo-text { font-weight: 700; font-size: 14px; letter-spacing: .08em; color: var(--text); }
+  .logo-sub  { font-size: 9px; color: var(--teal1); letter-spacing: .2em; text-transform: uppercase; }
+  .header-nav { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .nav-link {
+    padding: 5px 12px; border-radius: 5px; font-size: 10px; letter-spacing: .1em;
+    text-decoration: none; border: 1px solid var(--border); color: var(--muted);
+    text-transform: uppercase; transition: all .15s;
+  }
+  .nav-link:hover { color: var(--teal1); border-color: var(--teal1); }
+  .nav-link.active { background: rgba(24,150,133,.15); color: var(--teal1); border-color: var(--teal1); }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); display: inline-block; margin-right: 4px;
+  }
+  .status-dot.ok { background: var(--teal1); }
+
+  /* ── Layout ── */
+  .layout {
+    max-width: 1380px; margin: 0 auto; padding: 24px 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card-title {
+    font-size: 10px; color: var(--teal1); letter-spacing: .18em;
+    text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title svg { flex-shrink: 0; }
+
+  /* ── Inputs ── */
+  label { font-size: 9px; color: var(--teal1); letter-spacing: .15em; text-transform: uppercase; display: block; margin-bottom: 5px; }
+  input, textarea, select {
+    width: 100%; padding: 9px 13px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text);
+    font-size: 12px; font-family: var(--font);
+    outline: none; transition: border-color .15s;
+    resize: vertical;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--teal1); }
+  select option { background: var(--bg3); }
+
+  /* ── Buttons ── */
+  .btn {
+    padding: 10px 20px; border: none; border-radius: 7px;
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; cursor: pointer; font-family: var(--font);
+    transition: all .15s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal1), var(--teal2));
+    color: white;
+  }
+  .btn-primary:hover { opacity: .9; }
+  .btn-primary:disabled { background: rgba(255,255,255,.07); color: var(--muted); cursor: not-allowed; }
+  .btn-outline {
+    background: transparent; border: 1px solid var(--border); color: var(--teal1);
+  }
+  .btn-outline:hover { background: rgba(24,150,133,.1); }
+  .btn-sm { padding: 5px 12px; font-size: 9px; }
+
+  /* ── Context Window panel ── */
+  .context-grid { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+
+  /* ── Search row ── */
+  .search-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+
+  /* ── Status badges ── */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .badge-ok     { background: rgba(24,150,133,.2); color: var(--teal1); }
+  .badge-warn   { background: rgba(255,165,0,.15); color: #ffa500; }
+  .badge-error  { background: rgba(255,107,107,.15); color: var(--danger); }
+
+  /* ── Results table ── */
+  .table-wrap { overflow-x: auto; margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th {
+    text-align: left; padding: 8px 10px;
+    font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--teal1); border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 9px 10px; border-bottom: 1px solid rgba(24,150,133,.08);
+    vertical-align: top; color: #b0d8d8;
+  }
+  tr:hover td { background: rgba(24,150,133,.05); }
+  tr.selected td { background: rgba(24,150,133,.1); }
+  tr.selected td:first-child { border-left: 2px solid var(--teal1); }
+  .priority-stars { color: var(--teal1); letter-spacing: 0; }
+  .action-chip {
+    display: inline-block; padding: 2px 7px; border-radius: 3px;
+    font-size: 8px; font-weight: 700; text-transform: uppercase;
+    background: rgba(24,150,133,.15); color: var(--teal1);
+  }
+  .action-chip.urgent { background: rgba(255,107,107,.15); color: var(--danger); }
+  .copy-btn {
+    background: none; border: none; cursor: pointer; color: var(--muted);
+    font-size: 10px; padding: 0 4px; transition: color .1s;
+  }
+  .copy-btn:hover { color: var(--teal1); }
+
+  /* ── Summary box ── */
+  .summary-box {
+    background: rgba(24,150,133,.06);
+    border: 1px solid rgba(24,150,133,.18);
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 11px; color: #9acaca; line-height: 1.6;
+  }
+  .pain-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pain-tag {
+    background: rgba(24,150,133,.12); border: 1px solid var(--border);
+    padding: 3px 9px; border-radius: 4px; font-size: 10px; color: var(--muted);
+  }
+
+  /* ── M1/M2/M3 panel ── */
+  .msg-tabs { display: flex; gap: 2px; margin-bottom: 0; }
+  .msg-tab {
+    flex: 1; padding: 10px 6px;
+    background: rgba(255,255,255,.03); border: 1px solid var(--border);
+    border-bottom: none; border-radius: 7px 7px 0 0;
+    color: var(--muted); font-size: 10px; font-weight: 700;
+    letter-spacing: .08em; cursor: pointer; font-family: var(--font);
+    transition: all .15s; text-transform: uppercase; text-align: center;
+  }
+  .msg-tab.active { background: var(--teal1); color: white; border-color: var(--teal1); }
+  .msg-panel {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--teal1);
+    border-top: none; border-radius: 0 0 10px 10px;
+    padding: 18px 20px;
+  }
+  .msg-desc { font-size: 9px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .msg-body {
+    background: rgba(0,0,0,.2); border-radius: 7px;
+    padding: 14px 16px; font-size: 12px; line-height: 1.7;
+    color: var(--text); white-space: pre-wrap;
+    border: 1px solid rgba(255,255,255,.04);
+    min-height: 80px;
+  }
+  .msg-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .char-count { font-size: 9px; color: var(--muted); }
+  .char-warn { color: var(--danger); }
+  .msg-hint {
+    margin-top: 10px; padding: 8px 12px;
+    background: rgba(24,150,133,.06); border-radius: 5px;
+    border-left: 3px solid var(--teal1); font-size: 9px; color: var(--muted);
+  }
+
+  /* ── LinkedIn form ── */
+  .li-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+
+  /* ── Email composer ── */
+  .email-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+  /* ── HubSpot lifecycle ── */
+  .lifecycle { display: flex; align-items: center; gap: 0; margin-top: 16px; }
+  .lc-step { text-align: center; flex: 1; }
+  .lc-step-label   { font-size: 8px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+  .lc-step-trigger { font-size: 7px; color: rgba(74,138,138,.6); margin-top: 2px; }
+  .lc-arrow { color: rgba(24,150,133,.3); font-size: 14px; padding: 0 3px; }
+
+  /* ── Loader ── */
+  .spinner {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 3px solid rgba(24,150,133,.2);
+    border-top-color: var(--teal1);
+    animation: spin 1s linear infinite;
+    display: inline-block; margin: 8px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-row { text-align: center; padding: 24px; color: var(--teal1); font-size: 11px; }
+
+  /* ── Integration status bar ── */
+  .int-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+  /* ── Responsive 2-col ── */
+  @media (min-width: 1000px) {
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  }
+  @media (min-width: 1200px) {
+    .three-col { display: grid; grid-template-columns: 380px 1fr 360px; gap: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="logo-icon">⚕</div>
+  <div>
+    <div class="logo-text">AIMEDIC</div>
+    <div class="logo-sub">Prospect Intelligence</div>
+  </div>
+  <nav class="header-nav">
+    <a href="/" class="nav-link">🔍 Scraper</a>
+    <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+    <a href="/prospecting" class="nav-link active">🎯 Prospección</a>
+    <span id="int-status" style="font-size:10px; color:var(--muted); margin-left:8px">
+      <span class="status-dot" id="dot-perplexity"></span>Perplexity
+      &nbsp;
+      <span class="status-dot" id="dot-anthropic"></span>Claude
+      &nbsp;
+      <span class="status-dot" id="dot-zoho"></span>Zoho
+    </span>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <!-- ── Ventana de Contexto Global Perplexity ── -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Ventana de Contexto Perplexity — Define qué buscar en todas las búsquedas
+    </div>
+    <div class="context-grid">
+      <div>
+        <label>Contexto global (se envía a Perplexity en cada búsqueda)</label>
+        <textarea id="ctx-global" rows="3"
+          placeholder="Ej: Solo EPS e IPS de más de 200 camas en Colombia. Foco en CIO, CTO, Gerente de Sistemas. No incluir médicos. Incluir número PBX si disponible."
+        ></textarea>
+      </div>
+      <div>
+        <button class="btn btn-outline" onclick="saveContext()" style="white-space:nowrap">💾 Guardar Contexto</button>
+        <div id="ctx-saved" style="font-size:9px; color:var(--teal1); margin-top:5px; display:none">✓ Guardado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Búsqueda + Resultados + M1/M2/M3 (3 columnas en pantalla grande) ── -->
+  <div class="three-col">
+
+    <!-- Columna 1: Formulario de búsqueda -->
+    <div>
+      <div class="card">
+        <div class="card-title">🔍 Buscar institución</div>
+
+        <div style="margin-bottom:10px">
+          <label>Nombre de la institución *</label>
+          <input id="inst-name" type="text" placeholder="Ej: Clínica CES Medellín"/>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>Contexto específico para esta búsqueda (opcional)</label>
+          <textarea id="ctx-specific" rows="3"
+            placeholder="Ej: El CTO se llama Hernán Díaz, verificar si sigue ahí. Foco en sede de Laureles, no en el campus universitario."
+          ></textarea>
+        </div>
+        <div style="margin-bottom:14px">
+          <label>Modelo Perplexity</label>
+          <select id="plex-model">
+            <option value="sonar">sonar (rápido)</option>
+            <option value="sonar-pro">sonar-pro (profundo)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" id="btn-search" onclick="searchInstitution()" style="width:100%">
+          ⚡ Investigar con Perplexity
+        </button>
+      </div>
+
+      <!-- Persona e institución para LinkedIn -->
+      <div class="card" style="margin-top:0">
+        <div class="card-title">👤 Configurar mensajes LinkedIn</div>
+        <div class="li-form-grid">
+          <div>
+            <label>Tipo de cargo del prospecto</label>
+            <select id="li-persona">
+              <option value="cio_cto">⚙️ CIO / CTO</option>
+              <option value="gerente_tech">💻 Gerente Tecnología</option>
+              <option value="director_ops">🏥 Director Operaciones</option>
+              <option value="medico_clinico">🩺 Médico / Clínico</option>
+              <option value="director_comercial">📈 Director Comercial</option>
+            </select>
+          </div>
+          <div>
+            <label>Tipo de institución</label>
+            <select id="li-inst-type">
+              <option value="eps">EPS ⚡</option>
+              <option value="clinica">Clínica / Hospital</option>
+              <option value="ips">IPS</option>
+              <option value="laboratorio">Laboratorio</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <label>Frase del banner LinkedIn (si disponible)</label>
+          <input id="li-banner" type="text" placeholder="Ej: Transformo la tecnología en un motor estratégico..."/>
+        </div>
+        <div>
+          <label>Notas adicionales sobre el prospecto</label>
+          <textarea id="li-notes" rows="2" placeholder="Ej: Acaba de publicar sobre IA en salud. Conoce a Claudia de Compensar."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna 2: Tabla de resultados -->
+    <div>
+      <div class="card" id="results-card" style="min-height: 300px">
+        <div class="card-title">📋 Contactos encontrados</div>
+        <div id="results-content">
+          <div style="text-align:center; padding:40px 0; color:var(--muted); font-size:11px">
+            Ingresa el nombre de una institución y haz clic en "Investigar con Perplexity"
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary + pain points (se llena tras búsqueda) -->
+      <div class="card" id="summary-card" style="display:none">
+        <div class="card-title">⚡ Resumen institucional</div>
+        <div class="summary-box" id="summary-text"></div>
+        <div class="pain-tags" id="pain-tags"></div>
+      </div>
+    </div>
+
+    <!-- Columna 3: M1/M2/M3 + Email + Acciones -->
+    <div>
+
+      <!-- M1/M2/M3 -->
+      <div class="card" id="messages-card">
+        <div class="card-title">✉️ Mensajes LinkedIn M1 / M2 / M3</div>
+        <div id="messages-content">
+          <div style="color:var(--muted); font-size:11px">
+            Selecciona un contacto de la tabla para generar los mensajes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Email composer -->
+      <div class="card" id="email-card" style="margin-top:0">
+        <div class="card-title">📧 Email de outreach (Zoho)</div>
+        <div class="email-grid">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+            <div>
+              <label>Para (nombre)</label>
+              <input id="email-name" type="text" placeholder="María Fernanda"/>
+            </div>
+            <div>
+              <label>Email *</label>
+              <input id="email-to" type="email" placeholder="mf@clinicaces.edu.co"/>
+            </div>
+          </div>
+          <div>
+            <label>Asunto</label>
+            <input id="email-subject" type="text" placeholder="Se autocompleta al generar el cuerpo"/>
+          </div>
+          <div>
+            <label>Cuerpo del email</label>
+            <textarea id="email-body" rows="6" placeholder="Haz clic en 'Generar cuerpo' o escríbelo aquí"></textarea>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:2px">
+            <button class="btn btn-outline btn-sm" onclick="generateEmailBody()">✨ Generar cuerpo (IA)</button>
+            <button class="btn btn-primary btn-sm" onclick="sendEmail()" id="btn-send-email">📤 Enviar por Zoho</button>
+          </div>
+        </div>
+
+        <!-- HubSpot lifecycle -->
+        <div class="lifecycle">
+          <div class="lc-step"><div class="lc-step-label">Lead</div><div class="lc-step-trigger">Importado</div></div>
+          <div class="lc-arrow">→</div>
+          <div class="lc-step"><div class="lc-step-label">MQL</div><div class="lc-step-trigger">M1 enviado</div></div>
+          <div class="lc-arrow">→</div>
+          <div class="lc-step"><div class="lc-step-label">Connected</div><div class="lc-step-trigger">Acepta M1</div></div>
+          <div class="lc-arrow">→</div>
+          <div class="lc-step"><div class="lc-step-label">SQL</div><div class="lc-step-trigger">Responde M2</div></div>
+          <div class="lc-arrow">→</div>
+          <div class="lc-step"><div class="lc-step-label">Opportunity</div><div class="lc-step-trigger">Agenda</div></div>
+        </div>
+
+        <!-- Action row -->
+        <div style="display:flex; gap:7px; margin-top:12px; flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" onclick="createHubspot()">🟠 → HubSpot</button>
+          <button class="btn btn-outline btn-sm" onclick="createLinear()">🔷 → Linear</button>
+          <div id="actions-feedback" style="font-size:9px; color:var(--teal1); align-self:center"></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- .three-col -->
+
+</div><!-- .layout -->
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════════════
+let state = {
+  apiKey: localStorage.getItem('api_key') || '',
+  intelResult: null,        // ProspectIntelResult
+  selectedContact: null,    // ProspectContact
+  selectedIndex: 0,
+  linkedinMessages: null,   // {m1, m2, m3}
+  activeMsg: 'm1',
+  copiedKey: null,
+};
+
+// ════════════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════════════
+async function init() {
+  // Load current context window
+  try {
+    const r = await apiFetch('/api/v1/prospect-intel/context-window');
+    document.getElementById('ctx-global').value = r.context_window || '';
+  } catch(e) {}
+
+  // Load integration health
+  try {
+    const h = await apiFetch('/api/v1/prospect-intel/health');
+    dot('perplexity', h.perplexity);
+    dot('anthropic', h.anthropic);
+    dot('zoho', h.zoho_email);
+  } catch(e) {}
+}
+
+function dot(name, ok) {
+  const el = document.getElementById('dot-' + name);
+  if (el) el.className = 'status-dot' + (ok ? ' ok' : '');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// API
+// ════════════════════════════════════════════════════════════════════════
+async function apiFetch(url, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  // Try API key from localStorage
+  const apiKey = localStorage.getItem('api_key');
+  if (apiKey) opts.headers['X-API-Key'] = apiKey;
+
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err.detail || r.statusText);
+  }
+  return r.json();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// CONTEXT WINDOW
+// ════════════════════════════════════════════════════════════════════════
+async function saveContext() {
+  const ctx = document.getElementById('ctx-global').value.trim();
+  try {
+    await apiFetch('/api/v1/prospect-intel/context-window', 'POST', { context_window: ctx });
+    const saved = document.getElementById('ctx-saved');
+    saved.style.display = 'block';
+    setTimeout(() => saved.style.display = 'none', 2500);
+  } catch(e) { alert('Error guardando contexto: ' + e.message); }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SEARCH
+// ════════════════════════════════════════════════════════════════════════
+async function searchInstitution() {
+  const name = document.getElementById('inst-name').value.trim();
+  if (!name) { alert('Ingresa el nombre de la institución'); return; }
+
+  const btn = document.getElementById('btn-search');
+  btn.disabled = true;
+  btn.textContent = '⏳ Investigando...';
+
+  setResultsLoading(name);
+
+  try {
+    const result = await apiFetch('/api/v1/prospect-intel/search', 'POST', {
+      institution_name: name,
+      context_window: document.getElementById('ctx-specific').value.trim() || null,
+      model: document.getElementById('plex-model').value,
+    });
+
+    state.intelResult = result;
+    state.selectedContact = null;
+    state.linkedinMessages = null;
+
+    renderResults(result);
+    renderSummary(result);
+  } catch(e) {
+    document.getElementById('results-content').innerHTML =
+      `<div style="color:var(--danger);font-size:11px;padding:20px">Error: ${e.message}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⚡ Investigar con Perplexity';
+}
+
+function setResultsLoading(name) {
+  document.getElementById('results-content').innerHTML = `
+    <div class="loader-row">
+      <div class="spinner"></div><br>
+      Investigando "${name}" con Perplexity...
+    </div>`;
+  document.getElementById('summary-card').style.display = 'none';
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// RENDER RESULTS TABLE
+// ════════════════════════════════════════════════════════════════════════
+function renderResults(result) {
+  if (!result.contacts || result.contacts.length === 0) {
+    document.getElementById('results-content').innerHTML =
+      '<div style="color:var(--muted);font-size:11px;padding:20px">No se encontraron contactos.</div>';
+    return;
+  }
+
+  let rows = result.contacts.map((c, i) => {
+    const urgent = c.next_action === 'LLAMAR YA';
+    return `
+    <tr onclick="selectContact(${i})" id="row-${i}" style="cursor:pointer">
+      <td>${c.prioridad || '⭐⭐⭐'}</td>
+      <td>
+        <div style="font-weight:700;color:var(--text)">${esc(c.contacto)}</div>
+        ${c.cargo ? `<div style="font-size:9px;color:var(--muted)">${esc(c.cargo)}</div>` : ''}
+      </td>
+      <td>
+        ${c.email
+          ? `<span style="cursor:pointer" onclick="copyText('${esc(c.email)}', event)">${esc(c.email)} <button class="copy-btn" title="Copiar">⧉</button></span>`
+          : '<span style="color:var(--muted)">—</span>'}
+      </td>
+      <td>
+        ${c.telefono
+          ? `<span style="cursor:pointer" onclick="copyText('${esc(c.telefono)}', event)">${esc(c.telefono)} <button class="copy-btn" title="Copiar">⧉</button></span>`
+          : '<span style="color:var(--muted)">—</span>'}
+      </td>
+      <td style="max-width:160px;font-size:10px">${esc(c.rol_ti)}</td>
+      <td>
+        <span class="action-chip${urgent ? ' urgent' : ''}">${esc(c.next_action)}</span>
+      </td>
+      <td style="font-size:10px;color:var(--muted);max-width:150px">${esc(c.razon)}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="selectAndGenerate(${i}, event)">✉️ M1/M2/M3</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Prioridad</th>
+            <th>Contacto</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Rol TI</th>
+            <th>Next Action</th>
+            <th>Razón</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="font-size:9px;color:var(--muted);margin-top:8px">
+      ${result.contacts.length} contacto(s) encontrados · Click en una fila para seleccionar · ✉️ para generar M1/M2/M3
+    </div>`;
+}
+
+function renderSummary(result) {
+  const card = document.getElementById('summary-card');
+  if (!result.summary && (!result.pain_points || result.pain_points.length === 0)) {
+    card.style.display = 'none'; return;
+  }
+  card.style.display = 'block';
+  document.getElementById('summary-text').textContent = result.summary || '';
+  const tags = (result.pain_points || []).map(p => `<span class="pain-tag">⚡ ${esc(p)}</span>`).join('');
+  document.getElementById('pain-tags').innerHTML = tags;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SELECT CONTACT
+// ════════════════════════════════════════════════════════════════════════
+function selectContact(i) {
+  // Highlight row
+  document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('selected'));
+  const row = document.getElementById('row-' + i);
+  if (row) row.classList.add('selected');
+
+  state.selectedIndex = i;
+  const contacts = state.intelResult?.contacts || [];
+  state.selectedContact = contacts[i] || null;
+
+  if (state.selectedContact) {
+    // Pre-fill email fields
+    if (state.selectedContact.email)
+      document.getElementById('email-to').value = state.selectedContact.email;
+    const nm = [state.selectedContact.nombre, state.selectedContact.apellido].filter(Boolean).join(' ')
+            || state.selectedContact.contacto;
+    document.getElementById('email-name').value = nm;
+    if (state.selectedContact.banner_linkedin)
+      document.getElementById('li-banner').value = state.selectedContact.banner_linkedin;
+    if (state.selectedContact.notas)
+      document.getElementById('li-notes').value = state.selectedContact.notas;
+  }
+}
+
+async function selectAndGenerate(i, event) {
+  event.stopPropagation();
+  selectContact(i);
+  await generateLinkedIn();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// GENERATE M1/M2/M3
+// ════════════════════════════════════════════════════════════════════════
+async function generateLinkedIn() {
+  if (!state.selectedContact && !state.intelResult) {
+    alert('Primero busca una institución y selecciona un contacto.'); return;
+  }
+
+  const contact = state.selectedContact;
+  const mc = document.getElementById('messages-content');
+  mc.innerHTML = '<div class="loader-row"><div class="spinner"></div><br>Generando M1/M2/M3 con Claude...</div>';
+
+  const firstName = contact?.nombre || (contact?.contacto || '').split(' ')[0] || 'Contacto';
+  const lastName  = contact?.apellido || '';
+
+  try {
+    const msgs = await apiFetch('/api/v1/prospect-intel/generate-linkedin', 'POST', {
+      name: firstName,
+      last_name: lastName,
+      persona: document.getElementById('li-persona').value,
+      institution: state.intelResult?.institution_name || document.getElementById('inst-name').value,
+      institution_type: document.getElementById('li-inst-type').value,
+      banner_quote: document.getElementById('li-banner').value,
+      notes: document.getElementById('li-notes').value,
+    });
+
+    state.linkedinMessages = msgs;
+    state.activeMsg = 'm1';
+    renderMessages(msgs);
+  } catch(e) {
+    mc.innerHTML = `<div style="color:var(--danger);font-size:11px">Error: ${e.message}</div>`;
+  }
+}
+
+function renderMessages(msgs) {
+  if (!msgs.success) {
+    document.getElementById('messages-content').innerHTML =
+      `<div style="color:var(--danger);font-size:11px">Error: ${msgs.error}</div>`;
+    return;
+  }
+
+  const configs = {
+    m1: { label: 'M1 — Conexión',       color: '#189685', desc: 'Nota de conexión (0 venta) · Enviar al conectar',         maxChars: 300, hint: '📤 Enviar al conectar · Esperar respuesta · HubSpot → ATTEMPTED_TO_CONTACT' },
+    m2: { label: 'M2 — Descubrimiento', color: '#006F80', desc: 'Después de que acepte la conexión',                       maxChars: 600, hint: '📤 Enviar cuando acepte · HubSpot → CONNECTED' },
+    m3: { label: 'M3 — Propuesta',      color: '#082320', desc: 'Solo si respondió M2 · Incluye calendario',               maxChars: 800, hint: '📤 Enviar si respondió M2 · Si agenda → HubSpot → OPEN_DEAL' },
+  };
+
+  function tab(key) {
+    const cfg = configs[key];
+    const active = state.activeMsg === key;
+    return `<button class="msg-tab${active ? ' active':''}" onclick="switchMsg('${key}')">${cfg.label}</button>`;
+  }
+
+  function panel(key) {
+    if (state.activeMsg !== key) return '';
+    const cfg = configs[key];
+    const text = msgs[key] || '';
+    const warn = key === 'm1' && text.length > 300;
+    return `
+    <div class="msg-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="msg-desc">${cfg.desc}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="char-count${warn ? ' char-warn' : ''}">${text.length} chars${warn ? ' ⚠ MAX 300' : ''}</span>
+          <button class="btn btn-outline btn-sm" onclick="copyMsg('${key}')" id="copybtn-${key}">⧉ Copiar</button>
+        </div>
+      </div>
+      <div class="msg-body" id="msgbody-${key}">${esc(text)}</div>
+      <div class="msg-hint">${cfg.hint}</div>
+    </div>`;
+  }
+
+  document.getElementById('messages-content').innerHTML = `
+    <div>
+      <div class="msg-tabs">${tab('m1')}${tab('m2')}${tab('m3')}</div>
+      ${panel('m1')}${panel('m2')}${panel('m3')}
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="generateLinkedIn()">🔄 Regenerar</button>
+      </div>
+    </div>`;
+}
+
+function switchMsg(key) {
+  state.activeMsg = key;
+  if (state.linkedinMessages) renderMessages(state.linkedinMessages);
+}
+
+function copyMsg(key) {
+  const text = state.linkedinMessages?.[key] || '';
+  navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copybtn-' + key);
+  if (btn) { btn.textContent = '✓ Copiado'; setTimeout(() => btn.textContent = '⧉ Copiar', 2000); }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// GENERATE EMAIL BODY
+// ════════════════════════════════════════════════════════════════════════
+async function generateEmailBody() {
+  const contact = state.selectedContact;
+  const inst    = state.intelResult;
+
+  const firstName = contact?.nombre || (contact?.contacto || '').split(' ')[0] || '';
+  const lastName  = contact?.apellido || '';
+
+  try {
+    const r = await apiFetch('/api/v1/prospect-intel/generate-email-body', 'POST', {
+      name: firstName,
+      last_name: lastName,
+      cargo: contact?.cargo || '',
+      institution: inst?.institution_name || document.getElementById('inst-name').value,
+      institution_type: document.getElementById('li-inst-type').value,
+      pain_points: inst?.pain_points || [],
+      notes: document.getElementById('li-notes').value,
+      email_goal: 'solicitar una llamada de 20 minutos para mostrar cómo Aimedic reduce tiempos de espera',
+    });
+
+    document.getElementById('email-subject').value = r.subject || '';
+    document.getElementById('email-body').value = r.body || '';
+  } catch(e) {
+    alert('Error generando email: ' + e.message);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SEND EMAIL
+// ════════════════════════════════════════════════════════════════════════
+async function sendEmail() {
+  const toEmail = document.getElementById('email-to').value.trim();
+  const toName  = document.getElementById('email-name').value.trim();
+  const subject = document.getElementById('email-subject').value.trim();
+  const body    = document.getElementById('email-body').value.trim();
+
+  if (!toEmail || !subject || !body) {
+    alert('Completa Email, Asunto y Cuerpo'); return;
+  }
+
+  const btn = document.getElementById('btn-send-email');
+  btn.disabled = true; btn.textContent = '⏳ Enviando...';
+
+  try {
+    const r = await apiFetch('/api/v1/prospect-intel/send-email', 'POST', {
+      to_email: toEmail,
+      to_name: toName,
+      subject: subject,
+      body: body,
+      institution: state.intelResult?.institution_name || '',
+      cargo: state.selectedContact?.cargo || '',
+      hubspot_lifecycle: 'ATTEMPTED_TO_CONTACT',
+      create_linear_task: true,
+      linear_task_title: `Email → ${toName} (${state.intelResult?.institution_name || toEmail})`,
+    });
+
+    const email_ok   = r.results?.email?.ok;
+    const hs_ok      = r.results?.hubspot?.ok;
+    const linear_ok  = r.results?.linear?.ok;
+
+    document.getElementById('actions-feedback').innerHTML =
+      `📤 Email: ${email_ok ? '✓' : '✗'} · HubSpot: ${hs_ok ? '✓' : '✗'} · Linear: ${linear_ok ? '✓' : '✗'}`;
+  } catch(e) {
+    alert('Error enviando: ' + e.message);
+  }
+
+  btn.disabled = false; btn.textContent = '📤 Enviar por Zoho';
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// HUBSPOT / LINEAR individual
+// ════════════════════════════════════════════════════════════════════════
+async function createHubspot() {
+  const contact = state.selectedContact;
+  if (!contact?.email) { alert('El contacto seleccionado no tiene email'); return; }
+  try {
+    // Reuse send-email endpoint with empty body just for HubSpot entry
+    await apiFetch('/api/v1/prospect-intel/send-email', 'POST', {
+      to_email: contact.email,
+      to_name: [contact.nombre, contact.apellido].filter(Boolean).join(' ') || contact.contacto,
+      subject: '(Registro CRM)',
+      body: `Contacto creado desde Prospect Intel.\nInstitución: ${state.intelResult?.institution_name || ''}\nRol TI: ${contact.rol_ti}`,
+      institution: state.intelResult?.institution_name || '',
+      cargo: contact.cargo || '',
+      hubspot_lifecycle: 'ATTEMPTED_TO_CONTACT',
+      create_linear_task: false,
+    });
+    document.getElementById('actions-feedback').innerHTML = '🟠 Creado en HubSpot ✓';
+  } catch(e) { alert('Error HubSpot: ' + e.message); }
+}
+
+async function createLinear() {
+  const contact = state.selectedContact;
+  const inst = state.intelResult;
+  if (!inst) { alert('Primero busca una institución'); return; }
+  try {
+    const r = await apiFetch('/api/v1/prospect-intel/send-email', 'POST', {
+      to_email: contact?.email || 'noemail@placeholder.com',
+      to_name: [contact?.nombre, contact?.apellido].filter(Boolean).join(' ') || contact?.contacto || 'Contacto',
+      subject: `Prospecto: ${inst.institution_name}`,
+      body: (state.linkedinMessages?.m1 || '') + '\n\n' + (state.linkedinMessages?.m2 || ''),
+      institution: inst.institution_name,
+      cargo: contact?.cargo || '',
+      create_linear_task: true,
+      linear_task_title: `☎️ Prospecto: ${contact?.contacto || inst.institution_name}`,
+    });
+    const lok = r.results?.linear?.ok;
+    const url = r.results?.linear?.url;
+    document.getElementById('actions-feedback').innerHTML =
+      lok ? `🔷 Linear ✓ ${url ? `<a href="${url}" target="_blank" style="color:var(--teal1)">ver tarea</a>` : ''}` : `🔷 Linear ✗`;
+  } catch(e) { alert('Error Linear: ' + e.message); }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════════════════════════════
+function esc(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function copyText(text, event) {
+  event.stopPropagation();
+  navigator.clipboard.writeText(text);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
