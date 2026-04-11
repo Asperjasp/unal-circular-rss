@@ -1,1 +1,9 @@
-{}
+{
+  "name": "unal-circular-rss",
+  "version": "1.0.0",
+  "description": "RSS feed for Circular UNAL — Universidad Nacional de Colombia academic events",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}

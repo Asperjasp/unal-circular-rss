@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/feed", "destination": "/api/feed" },
+    { "source": "/feed/:campus", "destination": "/api/feed?campus=:campus" },
+    { "source": "/feed/:campus/:category", "destination": "/api/feed?campus=:campus&category=:category" }
+  ]
+}
